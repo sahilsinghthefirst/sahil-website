@@ -74,7 +74,7 @@ test("server renders the Sahil portfolio", async () => {
 });
 
 test("keeps the final page free of starter preview infrastructure", async () => {
-  const [page, layout, packageJson, css, nextConfig, vercelConfig, gitignore, readme, staticExport] = await Promise.all([
+  const [page, layout, packageJson, css, nextConfig, vercelConfig, gitignore, readme, staticExport, qrSvg] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
@@ -84,6 +84,7 @@ test("keeps the final page free of starter preview infrastructure", async () => 
     readFile(new URL("../.gitignore", import.meta.url), "utf8"),
     readFile(new URL("../README.md", import.meta.url), "utf8"),
     readFile(new URL("../scripts/static-export.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../public/sahil-portfolio-qr.svg", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /LINK_TARGETS/);
@@ -115,6 +116,13 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(readme, /npm test/);
   assert.match(readme, /npm run lint/);
   assert.match(readme, /dist\/client/);
+  assert.match(qrSvg, /data-target="https:\/\/gensahilsingh\.vercel\.app"/);
+  assert.match(qrSvg, /data-error-correction="H"/);
+  assert.match(qrSvg, /data-quiet-zone-modules="4"/);
+  assert.match(qrSvg, /SAHIL SINGH[\s\S]*SCAN TO VIEW PORTFOLIO[\s\S]*gensahilsingh\.vercel\.app/);
+  assert.match(qrSvg, /#f4efe5/);
+  assert.match(qrSvg, /#22201d/);
+  assert.match(qrSvg, /#c76a3b/);
   assert.doesNotMatch(css, /\.section-rule\s*\{[^}]*border-top\s*:/s);
   assert.doesNotMatch(css, /\.site-nav\s*\{[^}]*border-bottom\s*:/s);
   assert.match(css, /\.github-menu:hover\s*>\s*\.github-popover/);
@@ -148,4 +156,6 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   await assert.rejects(access(new URL("../public/assets/github-mark.png", import.meta.url)));
   await access(new URL("../public/papers/geml-paper.pdf", import.meta.url));
   await access(new URL("../public/papers/bpc-fno-paper.pdf", import.meta.url));
+  await access(new URL("../public/sahil-portfolio-qr.svg", import.meta.url));
+  await access(new URL("../public/sahil-portfolio-qr.png", import.meta.url));
 });
