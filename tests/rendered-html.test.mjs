@@ -53,7 +53,10 @@ test("server renders the Sahil portfolio", async () => {
   assert.match(html, /role="menuitem" href="https:\/\/github\.com\/gensahilsingh"[^>]*target="_blank"[^>]*rel="noreferrer"/);
   assert.match(html, /assets\/github-mark\.svg/);
   assert.match(html, /class="github-label">GitHub<\/span>/);
-  assert.match(html, /class="github-arrow"[^>]*>→<\/span>/);
+  assert.match(html, /class="github-arrow text-arrow"[^>]*>→\uFE0E<\/span>/);
+  assert.ok((html.match(/class="text-arrow"[^>]*>↗\uFE0E<\/span>/g) ?? []).length >= 10);
+  assert.doesNotMatch(html, /↗(?!\uFE0E)/);
+  assert.doesNotMatch(html, /class="text-arrow"[^>]*>[↓→](?!\uFE0E)/);
   assert.doesNotMatch(html, /github-mark\.png|github-caret/);
   assert.match(html, /sahilsinghthefirst/);
   assert.match(html, /https:\/\/github\.com\/sahilsinghthefirst/);
@@ -98,6 +101,11 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(layout, /icons:\s*\{[\s\S]*icon: "\/favicon\.svg"/);
   assert.doesNotMatch(page, /#about|#resume|Coming soon|Keep in touch|Say hello/);
   assert.doesNotMatch(page, /tel:\+17244574644|724-457-4644/);
+  assert.match(page, /const TEXT_ARROWS\s*=\s*\{[\s\S]*external:\s*"\\u2197\\uFE0E"/);
+  assert.equal((page.match(/className="text-arrow" aria-hidden="true">\{TEXT_ARROWS\.external\}<\/span>/g) ?? []).length, 9);
+  assert.match(page, /className="text-arrow" aria-hidden="true">\{TEXT_ARROWS\.down\}<\/span>/);
+  assert.match(page, /className="github-arrow text-arrow" aria-hidden="true">\{TEXT_ARROWS\.right\}<\/span>/);
+  assert.doesNotMatch(page, /↗(?!\uFE0E)/);
   assert.doesNotMatch(page, /A concise view of the questions|The public thread for new work/);
   assert.doesNotMatch(page, /_sites-preview|SkeletonPreview|codex-preview/);
   assert.doesNotMatch(layout, /_sites-preview|codex-preview|Starter Project/);
@@ -140,6 +148,7 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(css, /\.mini-pill\s*\{[^}]*font-family:\s*var\(--sans\)[^}]*font-size:\s*0\.68rem[^}]*font-weight:\s*700[^}]*line-height:\s*1\.5/s);
   assert.match(css, /\.github-label\s*\{[^}]*color:\s*inherit[^}]*font-family:\s*var\(--sans\)/s);
   assert.match(css, /\.github-arrow\s*\{[^}]*color:\s*var\(--accent\)/s);
+  assert.match(css, /\.text-arrow\s*\{[^}]*font-family:\s*var\(--sans\)[^}]*font-variant-emoji:\s*text/s);
   assert.match(css, /\.github-break\s*\{[^}]*flex-basis:\s*100%/s);
   assert.match(css, /@media\s*\(max-width:\s*340px\)[\s\S]*\.github-popover\s*\{[^}]*min-width:\s*min\(184px,\s*calc\(100vw\s*-\s*152px\)\)/s);
   assert.match(css, /@media\s*\(max-width:\s*780px\)[\s\S]*\.paper-disclosure summary \.summary-icon\s*\{[^}]*grid-column:\s*2[^}]*grid-row:\s*1[^}]*justify-self:\s*end[^}]*width:\s*max-content/s);
@@ -157,7 +166,9 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(css, /@media\s*\(max-width:\s*700px\)[\s\S]*\.logo-track\s*\{[^}]*width:\s*max-content[^}]*animation:\s*affiliation-marquee\s+24s\s+linear\s+infinite/s);
   assert.match(css, /@media\s*\(max-width:\s*700px\)[\s\S]*\.logo-set\s*\{[^}]*width:\s*max-content[^}]*flex:\s*0\s+0\s+auto/s);
   assert.match(css, /@media\s*\(max-width:\s*700px\)[\s\S]*\.logo-set-clone\s*\{[^}]*display:\s*flex/s);
-  assert.match(css, /\.logo-strip:hover \.logo-track,[\s\r\n]*\.logo-strip:active \.logo-track,[\s\r\n]*\.logo-strip:focus-within \.logo-track\s*\{[^}]*animation-play-state:\s*paused/s);
+  assert.match(css, /@media\s*\(max-width:\s*700px\)[\s\S]*\.logo-strip:active \.logo-track,[\s\r\n]*\.logo-strip:focus-within \.logo-track\s*\{[^}]*animation-play-state:\s*paused/s);
+  assert.match(css, /@media\s*\(hover:\s*hover\)\s+and\s+\(pointer:\s*fine\)[\s\S]*\.logo-strip:hover \.logo-track\s*\{[^}]*animation-play-state:\s*paused/s);
+  assert.doesNotMatch(css, /@media\s*\(max-width:\s*700px\)[\s\S]*\.logo-strip:hover \.logo-track,[\s\r\n]*\.logo-strip:active \.logo-track/s);
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\.logo-track\s*\{[^}]*animation:\s*none\s*!important[^}]*transform:\s*none\s*!important[\s\S]*\.logo-set-clone\s*\{[^}]*display:\s*none\s*!important/s);
 
   await assert.rejects(

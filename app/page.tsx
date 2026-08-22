@@ -4,6 +4,12 @@ export const LINK_TARGETS = {
   linkedin: "https://www.linkedin.com/in/sahil-singh-17a641239",
 } as const;
 
+const TEXT_ARROWS = {
+  down: "\u2193\uFE0E",
+  external: "\u2197\uFE0E",
+  right: "\u2192\uFE0E",
+} as const;
+
 const workLinks = [
   {
     title: "Résumé",
@@ -113,27 +119,27 @@ export default function Home() {
           </div>
           <div className="quick-links reveal reveal-delay-2" aria-label="Portfolio links">
             <a className="mini-pill" href="#papers">
-              Papers <span aria-hidden="true">↓</span>
+              Papers <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.down}</span>
             </a>
             <a className="mini-pill" href={LINK_TARGETS.resume} target="_blank" rel="noreferrer">
-              Résumé <span aria-hidden="true">↗</span>
+              Résumé <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
             </a>
             <a className="mini-pill" href={LINK_TARGETS.linkedin} target="_blank" rel="noreferrer">
-              LinkedIn <span aria-hidden="true">↗</span>
+              LinkedIn <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
             </a>
             <span className="github-break" aria-hidden="true" />
             <div className="github-menu">
               <button type="button" className="mini-pill github-trigger" aria-haspopup="menu" aria-label="Open GitHub profiles">
                 <img src="/assets/github-mark.svg" alt="" aria-hidden="true" />
                 <span className="github-label">GitHub</span>
-                <span className="github-arrow" aria-hidden="true">→</span>
+                <span className="github-arrow text-arrow" aria-hidden="true">{TEXT_ARROWS.right}</span>
               </button>
               <div className="github-popover" role="menu" aria-label="GitHub profiles">
                 <a role="menuitem" href="https://github.com/sahilsinghthefirst" target="_blank" rel="noreferrer">
-                  sahilsinghthefirst <span aria-hidden="true">↗</span>
+                  sahilsinghthefirst <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
                 </a>
                 <a role="menuitem" href="https://github.com/gensahilsingh" target="_blank" rel="noreferrer">
-                  gensahilsingh <span aria-hidden="true">↗</span>
+                  gensahilsingh <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
                 </a>
               </div>
             </div>
@@ -163,13 +169,13 @@ export default function Home() {
                 </summary>
                 <div className="paper-panel">
                   <a href="/papers/geml-paper.pdf" target="_blank" rel="noreferrer">
-                    Paper <span aria-hidden="true">↗</span>
+                    Paper <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
                   </a>
                   <a href={LINK_TARGETS.papers} target="_blank" rel="noreferrer">
-                    Project page <span aria-hidden="true">↗</span>
+                    Project page <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
                   </a>
                   <a href="https://github.com/saidlaboratory/GEML" target="_blank" rel="noreferrer">
-                    GitHub repository <span aria-hidden="true">↗</span>
+                    GitHub repository <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
                   </a>
                 </div>
               </details>
@@ -181,7 +187,7 @@ export default function Home() {
                 </summary>
                 <div className="paper-panel">
                   <a href="/papers/bpc-fno-paper.pdf" target="_blank" rel="noreferrer">
-                    Paper <span aria-hidden="true">↗</span>
+                    Paper <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
                   </a>
                 </div>
               </details>
@@ -202,7 +208,7 @@ export default function Home() {
             >
               <h2>{item.title}</h2>
               <span className="card-link">
-                {item.label} <span aria-hidden="true">↗</span>
+                {item.label} <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
               </span>
             </a>
           ))}

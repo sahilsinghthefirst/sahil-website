@@ -302,6 +302,13 @@ a:focus-visible {
   color: var(--accent);
 }
 
+.text-arrow {
+  font-family: var(--sans);
+  font-variant-emoji: text;
+  font-style: normal;
+  line-height: 1;
+}
+
 .mini-pill:hover {
   border-color: var(--warm-black);
   background: var(--warm-black);
@@ -1046,9 +1053,14 @@ a:focus-visible {
     display: flex;
   }
 
-  .logo-strip:hover .logo-track,
   .logo-strip:active .logo-track,
   .logo-strip:focus-within .logo-track {
+    animation-play-state: paused;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .logo-strip:hover .logo-track {
     animation-play-state: paused;
   }
 }
