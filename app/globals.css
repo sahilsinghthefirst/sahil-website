@@ -717,12 +717,34 @@ a:focus-visible {
 }
 
 .logo-strip {
-  display: flex;
-  gap: 12px;
+  display: block;
+  min-width: 0;
   overflow-x: auto;
   padding: 2px 2px 4px;
-  scrollbar-color: var(--line) transparent;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  touch-action: pan-x;
+}
+
+.logo-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.logo-track {
+  display: flex;
+  width: 100%;
+  gap: 12px;
+}
+
+.logo-set {
+  display: flex;
+  width: 100%;
+  flex: 1 1 auto;
+  gap: 12px;
+}
+
+.logo-set-clone {
+  display: none;
 }
 
 .logo-card {
@@ -795,6 +817,16 @@ a:focus-visible {
   font-size: 0.68rem;
   letter-spacing: 0.04em;
   text-align: center;
+}
+
+@keyframes affiliation-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(calc(-50% - 6px), 0, 0);
+  }
 }
 
 .site-footer {
@@ -993,6 +1025,34 @@ a:focus-visible {
   }
 }
 
+@media (max-width: 700px) {
+  .logo-strip {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .logo-track {
+    width: max-content;
+    animation: affiliation-marquee 24s linear infinite;
+    will-change: transform;
+  }
+
+  .logo-set {
+    width: max-content;
+    flex: 0 0 auto;
+  }
+
+  .logo-set-clone {
+    display: flex;
+  }
+
+  .logo-strip:hover .logo-track,
+  .logo-strip:active .logo-track,
+  .logo-strip:focus-within .logo-track {
+    animation-play-state: paused;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1004,5 +1064,14 @@ a:focus-visible {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .logo-track {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .logo-set-clone {
+    display: none !important;
   }
 }

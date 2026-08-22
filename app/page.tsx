@@ -58,6 +58,34 @@ const affiliations: Affiliation[] = [
   },
 ];
 
+function AffiliationSet({ duplicate = false }: { duplicate?: boolean }) {
+  return (
+    <div
+      className={duplicate ? "logo-set logo-set-clone" : "logo-set"}
+      role="list"
+      aria-hidden={duplicate ? true : undefined}
+    >
+      {affiliations.map((affiliation) => (
+        <div className="logo-card" role="listitem" key={`${duplicate ? "clone-" : ""}${affiliation.name}`}>
+          {affiliation.src ? (
+            <img
+              className={`affiliation-logo logo-${affiliation.shortName.toLowerCase().replaceAll(" ", "-")}`}
+              src={affiliation.src}
+              alt={duplicate ? "" : affiliation.alt}
+              loading="lazy"
+            />
+          ) : (
+            <span className="affiliation-wordmark rit-wordmark" aria-label={duplicate ? undefined : affiliation.alt}>
+              {affiliation.wordmark}
+            </span>
+          )}
+          <span className="logo-name">{affiliation.shortName}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <main className="site-shell">
@@ -114,24 +142,11 @@ export default function Home() {
       </section>
 
       <section id="affiliations" className="affiliations section-rule" aria-label="Affiliations">
-        <div className="logo-strip" role="list" aria-label="Affiliations">
-          {affiliations.map((affiliation) => (
-            <div className="logo-card" role="listitem" key={affiliation.name}>
-              {affiliation.src ? (
-                <img
-                  className={`affiliation-logo logo-${affiliation.shortName.toLowerCase().replaceAll(" ", "-")}`}
-                  src={affiliation.src}
-                  alt={affiliation.alt}
-                  loading="lazy"
-                />
-              ) : (
-                <span className="affiliation-wordmark rit-wordmark" aria-label={affiliation.alt}>
-                  {affiliation.wordmark}
-                </span>
-              )}
-              <span className="logo-name">{affiliation.shortName}</span>
-            </div>
-          ))}
+        <div className="logo-strip" aria-label="Affiliations">
+          <div className="logo-track">
+            <AffiliationSet />
+            <AffiliationSet duplicate />
+          </div>
         </div>
       </section>
 

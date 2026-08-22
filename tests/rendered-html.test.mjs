@@ -67,6 +67,10 @@ test("server renders the Sahil portfolio", async () => {
   assert.match(html, /assets\/ptmc-badge\.png/);
   assert.match(html, /assets\/korucusat-2\.png/);
   assert.match(html, /assets\/algoverse\.webp/);
+  assert.match(html, /class="logo-set" role="list"/);
+  assert.match(html, /class="logo-set logo-set-clone" role="list" aria-hidden="true"/);
+  assert.equal((html.match(/class="logo-set" role="list"/g) ?? []).length, 1);
+  assert.equal((html.match(/class="logo-set logo-set-clone"/g) ?? []).length, 1);
   assert.ok(html.indexOf('id="affiliations"') < html.indexOf('id="work"'));
   assert.doesNotMatch(html, /Making room for|Researcher <span|Currently learning in public|Curious by default/i);
   assert.doesNotMatch(html, /id="about"|id="resume"|Coming soon|Say hello/i);
@@ -144,6 +148,17 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.doesNotMatch(css, /\.papers-card h2/);
   assert.match(css, /\.work-card-link:focus-visible\s*\{[^}]*outline:\s*2px\s+solid\s+var\(--accent\)/s);
   assert.match(css, /\.work-card-link:hover \.card-link/);
+  assert.match(css, /\.logo-track\s*\{[^}]*width:\s*100%[^}]*gap:\s*12px/s);
+  assert.match(css, /\.logo-set\s*\{[^}]*width:\s*100%[^}]*flex:\s*1\s+1\s+auto[^}]*gap:\s*12px/s);
+  assert.match(css, /\.logo-set-clone\s*\{[^}]*display:\s*none/s);
+  assert.match(css, /@keyframes\s+affiliation-marquee[\s\S]*translate3d\(calc\(-50%\s*-\s*6px\)/s);
+  assert.match(css, /\.logo-strip\s*\{[^}]*overflow-x:\s*auto[^}]*touch-action:\s*pan-x/s);
+  assert.match(css, /\.logo-strip::-webkit-scrollbar\s*\{[^}]*display:\s*none/s);
+  assert.match(css, /@media\s*\(max-width:\s*700px\)[\s\S]*\.logo-track\s*\{[^}]*width:\s*max-content[^}]*animation:\s*affiliation-marquee\s+24s\s+linear\s+infinite/s);
+  assert.match(css, /@media\s*\(max-width:\s*700px\)[\s\S]*\.logo-set\s*\{[^}]*width:\s*max-content[^}]*flex:\s*0\s+0\s+auto/s);
+  assert.match(css, /@media\s*\(max-width:\s*700px\)[\s\S]*\.logo-set-clone\s*\{[^}]*display:\s*flex/s);
+  assert.match(css, /\.logo-strip:hover \.logo-track,[\s\r\n]*\.logo-strip:active \.logo-track,[\s\r\n]*\.logo-strip:focus-within \.logo-track\s*\{[^}]*animation-play-state:\s*paused/s);
+  assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\.logo-track\s*\{[^}]*animation:\s*none\s*!important[^}]*transform:\s*none\s*!important[\s\S]*\.logo-set-clone\s*\{[^}]*display:\s*none\s*!important/s);
 
   await assert.rejects(
     access(new URL("../app/_sites-preview", import.meta.url)),
