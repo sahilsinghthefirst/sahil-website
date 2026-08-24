@@ -1753,6 +1753,14 @@ a:focus-visible {
   line-height: 1.45;
 }
 
+.resource-intro .resource-context {
+  color: var(--warm-black);
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 .resource-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

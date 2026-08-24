@@ -114,6 +114,13 @@ test("server renders the Sahil portfolio", async () => {
   assert.match(projectsHtml, /<main class="projects-page" aria-labelledby="projects-title">/);
   assert.match(projectsHtml, /<h1 id="projects-title">Project Portfolio<\/h1>/);
   const projectsText = stripMarkup(projectsHtml);
+  const resourceIntro = projectsHtml.match(/<div class="resource-intro">([\s\S]*?)<\/div>/)?.[1] ?? "";
+  const resourceScope = "These links and projects are from middle school.";
+  assert.equal((resourceIntro.match(new RegExp(resourceScope, "g")) ?? []).length, 1);
+  const scopeIndex = resourceIntro.indexOf(resourceScope);
+  const photosIndex = resourceIntro.indexOf("Below is a Google Drive Folder with some selected photographs of my previous projects.");
+  const presentationsIndex = resourceIntro.indexOf("Here are the links to my presentations for some of my projects (images and diagrams also included in them):");
+  assert.ok(scopeIndex >= 0 && scopeIndex < photosIndex && photosIndex < presentationsIndex);
   assert.match(projectsHtml, /Current research direction: biomedical inverse modeling and computational cardiology, especially magnetic-field-based feature extraction for cardiovascular diagnosis\./);
   const accurateKielApproach = "The pipeline generates simulated electrophysiology through the Bueno-Cherry-Fenton model using openCARP and CellML, converts electrical activity into magnetic-field structure through a Biot-Savart forward model, and uses the Kiel Cardio Database only as a reference for realistic MCG signal scale and sensor geometry, not as patient-derived training data. The inverse stage is driven by an iFNO / neural-operator model for feature extraction and localization.";
   assert.ok(projectsText.includes(accurateKielApproach));
@@ -296,6 +303,7 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(projectsData, /supplementalSections/);
   assert.match(projectsData, /Potential applications/);
   assert.match(projectsData, /uses the Kiel Cardio Database only as a reference for realistic MCG signal scale and sensor geometry, not as patient-derived training data/);
+  assert.match(projectsData, /These links and projects are from middle school\./);
   assert.match(projectsData, /Google Drive selected photographs/);
   assert.match(page, /id="papers"/);
   assert.match(layout, /title: "Sahil Singh"/);
@@ -380,6 +388,7 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(css, /@media\s*\(max-width:\s*780px\)[\s\S]*\.projects-layout\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s);
   assert.match(css, /@media\s*\(max-width:\s*780px\)[\s\S]*\.project-disclosure summary\s*\{[^}]*grid-template-columns:\s*27px\s+minmax\(0,\s*1fr\)/s);
   assert.match(css, /\.project-supplemental\s*\{[^}]*border-top:\s*1px\s+solid\s+var\(--line\)/s);
+  assert.match(css, /\.resource-intro \.resource-context\s*\{[^}]*color:\s*var\(--warm-black\)[^}]*font-weight:\s*700/s);
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\.project-disclosure-icon\s*\{[^}]*transition:\s*none\s*!important/s);
   assert.match(css, /\.logo-track\s*\{[^}]*width:\s*100%[^}]*gap:\s*12px/s);
   assert.match(css, /\.logo-set\s*\{[^}]*width:\s*100%[^}]*flex:\s*1\s+1\s+auto[^}]*gap:\s*12px/s);

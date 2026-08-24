@@ -274,6 +274,7 @@ export const RESOURCES = [
 ] as const;
 
 export const RESOURCE_INTRO = {
+  scope: "These links and projects are from middle school.",
   photos: "Below is a Google Drive Folder with some selected photographs of my previous projects.",
   presentations:
     "Here are the links to my presentations for some of my projects (images and diagrams also included in them):",

@@ -237,6 +237,7 @@ export default function ProjectsPage() {
               <h2 id="resources-title">Selected presentations and photographs</h2>
             </div>
             <div className="resource-intro">
+              <p className="resource-context">{RESOURCE_INTRO.scope}</p>
               <p>{RESOURCE_INTRO.photos}</p>
               <p>{RESOURCE_INTRO.presentations}</p>
             </div>
