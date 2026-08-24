@@ -861,9 +861,169 @@ a:focus-visible {
   padding: 16px 0;
 }
 
-.about-placeholder {
-  min-height: 100dvh;
-  padding: 24px;
+.about-page {
+  width: min(calc(100% - 48px), 1180px);
+  margin: 0 auto;
+  padding: 24px 0 88px;
+}
+
+.about-header {
+  display: grid;
+  gap: clamp(52px, 8vw, 104px);
+}
+
+.about-home {
+  justify-self: start;
+}
+
+.about-heading {
+  max-width: 860px;
+}
+
+.about-kicker,
+.about-contents-label {
+  margin: 0 0 14px;
+  color: var(--accent);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.about-heading h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(3.2rem, 8vw, 7rem);
+  font-weight: 400;
+  letter-spacing: -0.075em;
+  line-height: 0.94;
+}
+
+.about-sublead {
+  max-width: 620px;
+  margin: 24px 0 0;
+  color: var(--muted);
+  font-family: var(--serif);
+  font-size: clamp(1.08rem, 1.8vw, 1.38rem);
+  line-height: 1.45;
+}
+
+.about-layout {
+  display: grid;
+  grid-template-columns: minmax(150px, 210px) minmax(0, 760px);
+  align-items: start;
+  gap: clamp(42px, 7vw, 110px);
+  margin-top: clamp(48px, 8vw, 92px);
+}
+
+.about-contents {
+  position: sticky;
+  top: 28px;
+}
+
+.about-contents-label {
+  margin-bottom: 16px;
+}
+
+.about-contents ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: about-section;
+}
+
+.about-contents li {
+  counter-increment: about-section;
+}
+
+.about-contents a {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+.about-contents a::before {
+  color: var(--accent);
+  content: counter(about-section, decimal-leading-zero);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.about-contents a:hover,
+.about-contents a:focus-visible {
+  color: var(--accent);
+}
+
+.about-prose {
+  min-width: 0;
+}
+
+.about-section {
+  scroll-margin-top: 32px;
+  margin: 0 0 clamp(50px, 7vw, 84px);
+}
+
+.about-section:last-child {
+  margin-bottom: 0;
+}
+
+.about-closing {
+  margin-top: 8px;
+  padding-top: 4px;
+}
+
+.about-closing h2 {
+  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+}
+
+.about-closing p {
+  max-width: 600px;
+  color: var(--muted);
+  font-size: clamp(0.98rem, 1.3vw, 1.1rem);
+}
+
+.about-section h2 {
+  max-width: 700px;
+  margin: 0 0 20px;
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 3vw, 2.7rem);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1.02;
+}
+
+.about-section p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--warm-black);
+  font-family: var(--serif);
+  font-size: clamp(1.04rem, 1.5vw, 1.22rem);
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.about-section p + p {
+  margin-top: 22px;
+}
+
+.about-section p a {
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  overflow-wrap: anywhere;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.about-section p a:hover,
+.about-section p a:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .footer-line {
@@ -935,6 +1095,59 @@ a:focus-visible {
     flex-basis: 100%;
     width: 0;
     height: 0;
+  }
+
+  .about-page {
+    width: min(100% - 32px, 1180px);
+    padding: 16px 0 64px;
+  }
+
+  .about-header {
+    gap: 46px;
+  }
+
+  .about-heading h1 {
+    font-size: clamp(3rem, 15vw, 4.8rem);
+  }
+
+  .about-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 42px;
+    margin-top: 48px;
+  }
+
+  .about-contents {
+    position: static;
+  }
+
+  .about-contents ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+  }
+
+  .about-contents a {
+    display: inline-flex;
+    grid-template-columns: none;
+    gap: 6px;
+    align-items: baseline;
+  }
+
+  .about-contents a::before {
+    display: inline-block;
+  }
+
+  .about-section {
+    margin-bottom: 50px;
+  }
+
+  .about-section h2 {
+    font-size: clamp(1.65rem, 8vw, 2.2rem);
+  }
+
+  .about-section p {
+    font-size: 1.08rem;
+    line-height: 1.62;
   }
 
   .site-shell {

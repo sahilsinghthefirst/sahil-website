@@ -1,6 +1,27 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
+
+const ABOUT_COPY_SHA256 = "2f849234cfba76c1942332a6afe14bafc35a937f3a31bc90b8a2481b226f1f3e";
+
+function normalizeBio(value) {
+  return value
+    .replace(/\u00a0/g, " ")
+    .replace(/\r\n/g, "\n")
+    .replace(/\s+/gu, " ")
+    .trim();
+}
+
+function stripMarkup(value) {
+  return value
+    .replace(/<[^>]+>/g, "")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;|&#39;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
 
 async function render(pathname = "/") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -34,10 +55,25 @@ test("server renders the Sahil portfolio", async () => {
   assert.match(aboutResponse.headers.get("content-type") ?? "", /^text\/html\b/i);
   const aboutHtml = await aboutResponse.text();
   assert.match(aboutHtml, /<title>About Sahil<\/title>/i);
-  assert.match(aboutHtml, /<meta name="robots" content="[^"]*noindex[^"]*nofollow/i);
-  assert.match(aboutHtml, /<main class="about-placeholder" aria-label="About Sahil">[\s\S]*<a[^>]*href="\/"[^>]*class="brand"/);
-  assert.equal((aboutHtml.match(/<a\s/g) ?? []).length, 1);
-  assert.doesNotMatch(aboutHtml, /biography|researcher|engineer|student|coming soon/i);
+  assert.match(aboutHtml, /<meta name="robots" content="[^"]*index[^"]*follow/i);
+  assert.doesNotMatch(aboutHtml, /noindex|nofollow/i);
+  assert.match(aboutHtml, /<main class="about-page" aria-labelledby="about-title">/);
+  assert.match(aboutHtml, /<a[^>]*href="\/"[^>]*class="brand about-home"[^>]*aria-label="Back to Sahil home"/);
+  assert.match(aboutHtml, /<h1 id="about-title">Hey, I’m Sahil\.<\/h1>/);
+  assert.match(aboutHtml, /<p class="about-sublead">I’m currently a 10th grader at Fulton Science Academy, in Alpharetta, Georgia\.<\/p>/);
+  assert.match(aboutHtml, /href="https:\/\/plume\.hackmit\.org\/project\/lwjjl-xrsqe-ucvue-rsqap"[^>]*target="_blank"[^>]*rel="noreferrer"[^>]*>https:\/\/plume\.hackmit\.org\/project\/lwjjl-xrsqe-ucvue-rsqap<\/a>/);
+  for (const id of ["problem-solving", "bpc-fno-rit", "symbolic-mathematics", "korucusat-2", "competitions-robotics", "hackathons", "closing"]) {
+    assert.match(aboutHtml, new RegExp(`<section class="about-section[^"]*" id="${id}"`));
+  }
+  const aboutArticle = aboutHtml.match(/<article class="about-prose"[^>]*>([\s\S]*?)<\/article>/)?.[1] ?? "";
+  assert.doesNotMatch(aboutArticle, /Hey, I’m Sahil\.|I’m currently a 10th grader at Fulton Science Academy, in Alpharetta, Georgia\./);
+  const renderedArticleBio = [...aboutArticle.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)]
+    .map((match) => stripMarkup(match[1]))
+    .join("\n\n");
+  const heroHeading = aboutHtml.match(/<h1 id="about-title">([\s\S]*?)<\/h1>/)?.[1] ?? "";
+  const heroSublead = aboutHtml.match(/<p class="about-sublead">([\s\S]*?)<\/p>/)?.[1] ?? "";
+  const renderedBio = [stripMarkup(heroHeading), stripMarkup(heroSublead), renderedArticleBio].join("\n\n");
+  assert.equal(createHash("sha256").update(normalizeBio(renderedBio)).digest("hex"), ABOUT_COPY_SHA256);
   assert.match(html, /<title>Sahil — Researcher, Engineer, Student<\/title>/i);
   assert.match(html, /rel="icon"[^>]*href="\/favicon\.ico"/i);
   assert.match(html, /rel="shortcut icon"[^>]*href="\/favicon\.ico"/i);
@@ -93,9 +129,10 @@ test("server renders the Sahil portfolio", async () => {
 });
 
 test("keeps the final page free of starter preview infrastructure", async () => {
-  const [page, aboutPage, layout, packageJson, css, nextConfig, vercelConfig, gitignore, readme, staticExport, qrSvg] = await Promise.all([
+  const [page, aboutPage, aboutCopy, layout, packageJson, css, nextConfig, vercelConfig, gitignore, readme, staticExport, qrSvg] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/about/about-copy.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
@@ -113,9 +150,23 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(page, /Read about me in detail/);
   assert.match(page, /about-cta-break/);
   assert.match(aboutPage, /title:\s*"About Sahil"/);
-  assert.match(aboutPage, /robots:\s*\{[\s\S]*index:\s*false[\s\S]*follow:\s*false/);
-  assert.match(aboutPage, /className="about-placeholder" aria-label="About Sahil"/);
-  assert.doesNotMatch(aboutPage, /biography|researcher|engineer|student|coming soon/i);
+  assert.match(aboutPage, /robots:\s*\{[\s\S]*index:\s*true[\s\S]*follow:\s*true/);
+  assert.doesNotMatch(aboutPage, /noindex|nofollow|about-placeholder/);
+  assert.match(aboutPage, /ABOUT_SECTIONS/);
+  assert.match(aboutPage, /introSection\s*=\s*ABOUT_SECTIONS\[0\]/);
+  assert.match(aboutPage, /articleSections\s*=\s*ABOUT_SECTIONS\.slice\(1\)/);
+  assert.match(aboutPage, /contentsSections\s*=\s*articleSections\.slice\(0,\s*-1\)/);
+  assert.match(aboutPage, /CASCADE_URL/);
+  assert.match(aboutCopy, /export const ABOUT_COPY_SHA256 = "2f849234cfba76c1942332a6afe14bafc35a937f3a31bc90b8a2481b226f1f3e"/);
+  assert.match(aboutCopy, /"Hey, I’m Sahil\."/);
+  assert.match(aboutCopy, /"I’m currently a 10th grader at Fulton Science Academy, in Alpharetta, Georgia\."/);
+  assert.match(aboutCopy, /Problem-solving & learning/);
+  assert.match(aboutCopy, /BPC-FNO & RIT/);
+  assert.match(aboutCopy, /Symbolic mathematics & interpretability/);
+  assert.match(aboutCopy, /KORUCUSAT-2/);
+  assert.match(aboutCopy, /Competitions & robotics/);
+  assert.match(aboutCopy, /Hackathons/);
+  assert.match(aboutCopy, /https:\/\/plume\.hackmit\.org\/project\/lwjjl-xrsqe-ucvue-rsqap/);
   assert.match(page, /id="papers"/);
   assert.match(layout, /title: "Sahil — Researcher, Engineer, Student"/);
   assert.match(layout, /icons:\s*\{[\s\S]*icon: "\/favicon\.ico"[\s\S]*shortcut: "\/favicon\.ico"[\s\S]*apple: "\/favicon\.png"/);
@@ -182,6 +233,14 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(css, /\.about-cta\s+span\s*\{[^}]*color:\s*#f1a67f/s);
   assert.match(css, /\.about-cta-break\s*\{[^}]*display:\s*none/s);
   assert.match(css, /@media\s*\(max-width:\s*780px\)[\s\S]*\.about-cta-break\s*\{[^}]*display:\s*block[^}]*flex-basis:\s*100%/s);
+  assert.match(css, /\.about-layout\s*\{[^}]*grid-template-columns:\s*minmax\(150px,\s*210px\)\s+minmax\(0,\s*760px\)/s);
+  assert.match(css, /\.about-contents\s*\{[^}]*position:\s*sticky/s);
+  assert.match(css, /\.about-prose\s*\{[^}]*min-width:\s*0/s);
+  assert.match(css, /\.about-sublead\s*\{[\s\S]*font-family:\s*var\(--serif\)/s);
+  assert.match(css, /\.about-closing\s*\{[\s\S]*margin-top:/s);
+  assert.match(css, /\.about-section p\s*\{[^}]*overflow-wrap:\s*anywhere/s);
+  assert.match(css, /@media\s*\(max-width:\s*780px\)[\s\S]*\.about-layout\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s);
+  assert.match(css, /@media\s*\(max-width:\s*780px\)[\s\S]*\.about-contents\s*\{[^}]*position:\s*static/s);
   assert.match(css, /\.logo-track\s*\{[^}]*width:\s*100%[^}]*gap:\s*12px/s);
   assert.match(css, /\.logo-set\s*\{[^}]*width:\s*100%[^}]*flex:\s*1\s+1\s+auto[^}]*gap:\s*12px/s);
   assert.match(css, /\.logo-set-clone\s*\{[^}]*display:\s*none/s);
