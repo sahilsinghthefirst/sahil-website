@@ -6,8 +6,9 @@ export const metadata: Metadata = {
   description:
     "The personal portfolio of Sahil: a quiet index of research, engineering, and the questions connecting them.",
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.png",
   },
 };
 

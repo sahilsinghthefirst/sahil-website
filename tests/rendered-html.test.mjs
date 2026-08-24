@@ -39,7 +39,9 @@ test("server renders the Sahil portfolio", async () => {
   assert.equal((aboutHtml.match(/<a\s/g) ?? []).length, 1);
   assert.doesNotMatch(aboutHtml, /biography|researcher|engineer|student|coming soon/i);
   assert.match(html, /<title>Sahil — Researcher, Engineer, Student<\/title>/i);
-  assert.match(html, /rel="icon"[^>]*href="\/favicon\.svg"/i);
+  assert.match(html, /rel="icon"[^>]*href="\/favicon\.ico"/i);
+  assert.match(html, /rel="shortcut icon"[^>]*href="\/favicon\.ico"/i);
+  assert.match(html, /rel="apple-touch-icon"[^>]*href="\/favicon\.png"/i);
   assert.match(html, /hey, I[’']m Sahil(?!\.)/i);
   assert.match(html, /mailto:gensahilsingh@gmail\.com[^>]*>gensahilsingh@gmail\.com/);
   assert.match(html, /<div class="quick-links[\s\S]*?<a class="mini-pill about-cta" href="\/about">\s*Read about me in detail\s*<span class="text-arrow"[^>]*>→\uFE0E<\/span>[\s\S]*?<span class="about-cta-break"[^>]*>[\s\S]*?<a class="mini-pill" href="#papers">/);
@@ -116,7 +118,7 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.doesNotMatch(aboutPage, /biography|researcher|engineer|student|coming soon/i);
   assert.match(page, /id="papers"/);
   assert.match(layout, /title: "Sahil — Researcher, Engineer, Student"/);
-  assert.match(layout, /icons:\s*\{[\s\S]*icon: "\/favicon\.svg"/);
+  assert.match(layout, /icons:\s*\{[\s\S]*icon: "\/favicon\.ico"[\s\S]*shortcut: "\/favicon\.ico"[\s\S]*apple: "\/favicon\.png"/);
   assert.doesNotMatch(page, /#about|#resume|Coming soon|Keep in touch|Say hello/);
   assert.doesNotMatch(page, /tel:\+17244574644|724-457-4644/);
   assert.match(page, /const TEXT_ARROWS\s*=\s*\{[\s\S]*external:\s*"\\u2197\\uFE0E"/);
@@ -197,7 +199,23 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   await assert.rejects(
     access(new URL("../app/_sites-preview", import.meta.url)),
   );
-  await access(new URL("../public/favicon.svg", import.meta.url));
+  const faviconPng = await readFile(new URL("../public/favicon.png", import.meta.url));
+  const faviconIco = await readFile(new URL("../public/favicon.ico", import.meta.url));
+  assert.equal(faviconPng.subarray(0, 8).toString("hex"), "89504e470d0a1a0a");
+  assert.equal(faviconPng.readUInt32BE(16), 512);
+  assert.equal(faviconPng.readUInt32BE(20), 512);
+  assert.equal(faviconPng[25], 6);
+  assert.equal(faviconIco.readUInt16LE(0), 0);
+  assert.equal(faviconIco.readUInt16LE(2), 1);
+  assert.ok(faviconIco.readUInt16LE(4) >= 3);
+  const icoSizes = Array.from({ length: faviconIco.readUInt16LE(4) }, (_, index) => {
+    const offset = 6 + index * 16;
+    return [faviconIco[offset] || 256, faviconIco[offset + 1] || 256];
+  });
+  for (const size of [[16, 16], [32, 32], [48, 48]]) {
+    assert.ok(icoSizes.some(([width, height]) => width === size[0] && height === size[1]));
+  }
+  await assert.rejects(access(new URL("../public/favicon.svg", import.meta.url)));
   await access(new URL("../public/sahil-singh-resume.pdf", import.meta.url));
   await access(new URL("../public/assets/ptmc.png", import.meta.url));
   await access(new URL("../public/assets/ptmc-badge.png", import.meta.url));
