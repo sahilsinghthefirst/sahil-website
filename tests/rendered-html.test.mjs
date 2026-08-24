@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
-const ABOUT_COPY_SHA256 = "4baa15797f11ca62c358505439547e40245b07d7d72f2f22f1cee5d008f8cee2";
+const ABOUT_COPY_SHA256 = "81a4e4de46f91548739ff230155a30e0b07e62c3e9f4e3f053154906e4dc8f41";
 
 function normalizeBio(value) {
   return value
@@ -21,6 +21,11 @@ function stripMarkup(value) {
     .replace(/&#x27;|&#39;/g, "'")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">");
+}
+
+function includesStandalonePhrase(value, phrase) {
+  const index = value.indexOf(phrase);
+  return index >= 0 && !/[A-Za-z]/.test(value[index + phrase.length] ?? "");
 }
 
 async function render(pathname = "/") {
@@ -70,6 +75,32 @@ test("server renders the Sahil portfolio", async () => {
   const renderedArticleBio = [...aboutArticle.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)]
     .map((match) => stripMarkup(match[1]))
     .join("\n\n");
+  for (const phrase of [
+    "a naturally tendency",
+    "I am research and learning about ML",
+    "I had recently got at internship",
+    "directed acrylic graphs (DAG)",
+    "mechanistic interpretibility",
+    "experimentatio",
+    "I am apart of FTC Team",
+  ]) {
+    assert.equal(includesStandalonePhrase(renderedArticleBio, phrase), false, `old phrase remains: ${phrase}`);
+  }
+  for (const phrase of [
+    "a natural tendency",
+    "I am researching and learning about ML",
+    "I recently began an internship",
+    "directed acyclic graphs (DAGs)",
+    "mechanistic interpretability side,",
+    "experimentation",
+    "I am a part of FTC Team",
+  ]) {
+    assert.equal(renderedArticleBio.includes(phrase), true, `corrected phrase missing: ${phrase}`);
+  }
+  const kielSentence = "The real data was from a public data set, the Kiel Cardio Database.";
+  const clarification = "The current benchmark is synthetic; the Kiel Cardio Database was used as a reference for realistic MCG signal scale and sensor geometry.";
+  assert.equal(renderedArticleBio.split(clarification).length - 1, 1);
+  assert.ok(renderedArticleBio.includes(`${kielSentence} ${clarification}`));
   const heroHeading = aboutHtml.match(/<h1 id="about-title">([\s\S]*?)<\/h1>/)?.[1] ?? "";
   const heroSublead = aboutHtml.match(/<p class="about-sublead">([\s\S]*?)<\/p>/)?.[1] ?? "";
   const renderedBio = [stripMarkup(heroHeading), stripMarkup(heroSublead), renderedArticleBio].join("\n\n");
@@ -158,7 +189,7 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(aboutPage, /articleSections\s*=\s*ABOUT_SECTIONS\.slice\(1\)/);
   assert.match(aboutPage, /contentsSections\s*=\s*articleSections\.slice\(0,\s*-1\)/);
   assert.match(aboutPage, /CASCADE_URL/);
-  assert.match(aboutCopy, /export const ABOUT_COPY_SHA256 = "4baa15797f11ca62c358505439547e40245b07d7d72f2f22f1cee5d008f8cee2"/);
+  assert.match(aboutCopy, /export const ABOUT_COPY_SHA256 = "81a4e4de46f91548739ff230155a30e0b07e62c3e9f4e3f053154906e4dc8f41"/);
   assert.match(aboutCopy, /"hey, I’m Sahil\."/);
   assert.match(aboutCopy, /"I’m currently a 10th grader at Fulton Science Academy, in Alpharetta, Georgia\."/);
   assert.match(aboutCopy, /Problem-solving & learning/);
