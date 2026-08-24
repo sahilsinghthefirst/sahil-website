@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const LINK_TARGETS = {
   papers: "https://saidlaboratory.github.io/GEML/",
   resume: "/sahil-singh-resume.pdf",
@@ -100,12 +102,12 @@ export default function Home() {
       </a>
 
       <header className="site-nav" aria-label="Primary navigation">
-        <a className="brand" href="#top" aria-label="Sahil home">
+        <Link className="brand" href="/" aria-label="Sahil home">
           <span className="brand-mark" aria-hidden="true">
             S
           </span>
           <span>Sahil</span>
-        </a>
+        </Link>
       </header>
 
       <div id="top" />

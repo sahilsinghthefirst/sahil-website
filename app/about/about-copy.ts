@@ -5,7 +5,7 @@ export const ABOUT_SECTIONS = [
     id: "intro",
     title: "About",
     paragraphs: [
-      "Hey, I’m Sahil.",
+      "hey, I’m Sahil.",
       "I’m currently a 10th grader at Fulton Science Academy, in Alpharetta, Georgia.",
     ],
   },
@@ -72,4 +72,4 @@ export const ABOUT_SECTIONS = [
   },
 ] as const;
 
-export const ABOUT_COPY_SHA256 = "2f849234cfba76c1942332a6afe14bafc35a937f3a31bc90b8a2481b226f1f3e";
+export const ABOUT_COPY_SHA256 = "4baa15797f11ca62c358505439547e40245b07d7d72f2f22f1cee5d008f8cee2";

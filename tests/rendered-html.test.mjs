@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
-const ABOUT_COPY_SHA256 = "2f849234cfba76c1942332a6afe14bafc35a937f3a31bc90b8a2481b226f1f3e";
+const ABOUT_COPY_SHA256 = "4baa15797f11ca62c358505439547e40245b07d7d72f2f22f1cee5d008f8cee2";
 
 function normalizeBio(value) {
   return value
@@ -59,14 +59,14 @@ test("server renders the Sahil portfolio", async () => {
   assert.doesNotMatch(aboutHtml, /noindex|nofollow/i);
   assert.match(aboutHtml, /<main class="about-page" aria-labelledby="about-title">/);
   assert.match(aboutHtml, /<a[^>]*href="\/"[^>]*class="brand about-home"[^>]*aria-label="Back to Sahil home"/);
-  assert.match(aboutHtml, /<h1 id="about-title">Hey, I’m Sahil\.<\/h1>/);
+  assert.match(aboutHtml, /<h1 id="about-title">hey, I’m Sahil\.<\/h1>/);
   assert.match(aboutHtml, /<p class="about-sublead">I’m currently a 10th grader at Fulton Science Academy, in Alpharetta, Georgia\.<\/p>/);
   assert.match(aboutHtml, /href="https:\/\/plume\.hackmit\.org\/project\/lwjjl-xrsqe-ucvue-rsqap"[^>]*target="_blank"[^>]*rel="noreferrer"[^>]*>https:\/\/plume\.hackmit\.org\/project\/lwjjl-xrsqe-ucvue-rsqap<\/a>/);
   for (const id of ["problem-solving", "bpc-fno-rit", "symbolic-mathematics", "korucusat-2", "competitions-robotics", "hackathons", "closing"]) {
     assert.match(aboutHtml, new RegExp(`<section class="about-section[^"]*" id="${id}"`));
   }
   const aboutArticle = aboutHtml.match(/<article class="about-prose"[^>]*>([\s\S]*?)<\/article>/)?.[1] ?? "";
-  assert.doesNotMatch(aboutArticle, /Hey, I’m Sahil\.|I’m currently a 10th grader at Fulton Science Academy, in Alpharetta, Georgia\./);
+  assert.doesNotMatch(aboutArticle, /hey, I’m Sahil\.|I’m currently a 10th grader at Fulton Science Academy, in Alpharetta, Georgia\./);
   const renderedArticleBio = [...aboutArticle.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)]
     .map((match) => stripMarkup(match[1]))
     .join("\n\n");
@@ -75,6 +75,7 @@ test("server renders the Sahil portfolio", async () => {
   const renderedBio = [stripMarkup(heroHeading), stripMarkup(heroSublead), renderedArticleBio].join("\n\n");
   assert.equal(createHash("sha256").update(normalizeBio(renderedBio)).digest("hex"), ABOUT_COPY_SHA256);
   assert.match(html, /<title>Sahil — Researcher, Engineer, Student<\/title>/i);
+  assert.match(html, /<a[^>]*href="\/"[^>]*class="brand"[^>]*aria-label="Sahil home"/);
   assert.match(html, /rel="icon"[^>]*href="\/favicon\.ico"/i);
   assert.match(html, /rel="shortcut icon"[^>]*href="\/favicon\.ico"/i);
   assert.match(html, /rel="apple-touch-icon"[^>]*href="\/favicon\.png"/i);
@@ -157,8 +158,8 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(aboutPage, /articleSections\s*=\s*ABOUT_SECTIONS\.slice\(1\)/);
   assert.match(aboutPage, /contentsSections\s*=\s*articleSections\.slice\(0,\s*-1\)/);
   assert.match(aboutPage, /CASCADE_URL/);
-  assert.match(aboutCopy, /export const ABOUT_COPY_SHA256 = "2f849234cfba76c1942332a6afe14bafc35a937f3a31bc90b8a2481b226f1f3e"/);
-  assert.match(aboutCopy, /"Hey, I’m Sahil\."/);
+  assert.match(aboutCopy, /export const ABOUT_COPY_SHA256 = "4baa15797f11ca62c358505439547e40245b07d7d72f2f22f1cee5d008f8cee2"/);
+  assert.match(aboutCopy, /"hey, I’m Sahil\."/);
   assert.match(aboutCopy, /"I’m currently a 10th grader at Fulton Science Academy, in Alpharetta, Georgia\."/);
   assert.match(aboutCopy, /Problem-solving & learning/);
   assert.match(aboutCopy, /BPC-FNO & RIT/);
