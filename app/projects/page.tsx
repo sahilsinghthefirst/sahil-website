@@ -78,8 +78,7 @@ export default function ProjectsPage() {
         <div className="projects-content">
           <section id="snapshot" className="projects-section projects-snapshot" aria-labelledby="snapshot-title">
             <div className="projects-section-heading">
-              <p className="projects-section-kicker">Current direction</p>
-              <h2 id="snapshot-title">Research, engineering, and presentation</h2>
+              <h2 id="snapshot-title">Current direction</h2>
             </div>
             <div className="projects-snapshot-grid">
               <article className="projects-snapshot-item">
@@ -103,8 +102,7 @@ export default function ProjectsPage() {
 
           <section id="areas" className="projects-section" aria-labelledby="areas-title">
             <div className="projects-section-heading">
-              <p className="projects-section-kicker">Area / Examples in this portfolio</p>
-              <h2 id="areas-title">A map of the technical work</h2>
+              <h2 id="areas-title">Area / Examples in this portfolio</h2>
             </div>
             <div className="area-list" role="list">
               {AREAS.map((item) => (
@@ -118,8 +116,7 @@ export default function ProjectsPage() {
 
           <section id="major-projects" className="projects-section" aria-labelledby="major-projects-title">
             <div className="projects-section-heading">
-              <p className="projects-section-kicker">Six major projects</p>
-              <h2 id="major-projects-title">Technical evidence, organized by system</h2>
+              <h2 id="major-projects-title">Six major projects</h2>
             </div>
             <div className="major-project-list">
               {MAJOR_PROJECTS.map((project, index) => (
@@ -195,8 +192,7 @@ export default function ProjectsPage() {
 
           <section id="additional-projects" className="projects-section" aria-labelledby="additional-projects-title">
             <div className="projects-section-heading">
-              <p className="projects-section-kicker">Additional selected projects</p>
-              <h2 id="additional-projects-title">Smaller systems and prototypes</h2>
+              <h2 id="additional-projects-title">Additional selected projects</h2>
             </div>
             <div className="additional-project-grid" role="list">
               {ADDITIONAL_PROJECTS.map((project) => (
@@ -210,8 +206,7 @@ export default function ProjectsPage() {
 
           <section id="recognition" className="projects-section" aria-labelledby="recognition-title">
             <div className="projects-section-heading">
-              <p className="projects-section-kicker">Recognition and technical profile</p>
-              <h2 id="recognition-title">Signals around the work</h2>
+              <h2 id="recognition-title">Recognition and technical profile</h2>
             </div>
             <div className="recognition-grid">
               {RECOGNITION_GROUPS.map((group) => (
@@ -233,8 +228,7 @@ export default function ProjectsPage() {
 
           <section id="resources" className="projects-section projects-resources" aria-labelledby="resources-title">
             <div className="projects-section-heading">
-              <p className="projects-section-kicker">Resources</p>
-              <h2 id="resources-title">Selected presentations and photographs</h2>
+              <h2 id="resources-title">Resources</h2>
             </div>
             <div className="resource-intro">
               <p className="resource-context">{RESOURCE_INTRO.scope}</p>

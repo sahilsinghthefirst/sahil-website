@@ -113,6 +113,28 @@ test("server renders the Sahil portfolio", async () => {
   assert.match(projectsHtml, /<meta name="robots" content="[^"]*index[^"]*follow/i);
   assert.match(projectsHtml, /<main class="projects-page" aria-labelledby="projects-title">/);
   assert.match(projectsHtml, /<h1 id="projects-title">Project Portfolio<\/h1>/);
+  const sectionHeadings = [
+    ["snapshot-title", "Current direction"],
+    ["areas-title", "Area / Examples in this portfolio"],
+    ["major-projects-title", "Six major projects"],
+    ["additional-projects-title", "Additional selected projects"],
+    ["recognition-title", "Recognition and technical profile"],
+    ["resources-title", "Resources"],
+  ];
+  assert.equal((projectsHtml.match(/<h2 id="(?:snapshot-title|areas-title|major-projects-title|additional-projects-title|recognition-title|resources-title)">/g) ?? []).length, 6);
+  for (const [id, text] of sectionHeadings) {
+    assert.equal(projectsHtml.split(`<h2 id="${id}">${text}</h2>`).length - 1, 1);
+  }
+  for (const oldHeading of [
+    "Research, engineering, and presentation",
+    "A map of the technical work",
+    "Technical evidence, organized by system",
+    "Smaller systems and prototypes",
+    "Signals around the work",
+    "Selected presentations and photographs",
+  ]) {
+    assert.equal(projectsHtml.includes(oldHeading), false, `old Projects heading remains: ${oldHeading}`);
+  }
   const projectsText = stripMarkup(projectsHtml);
   const resourceIntro = projectsHtml.match(/<div class="resource-intro">([\s\S]*?)<\/div>/)?.[1] ?? "";
   const resourceScope = "These links and projects are from middle school.";
@@ -298,6 +320,17 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(projectsPage, /MAJOR_PROJECTS/);
   assert.match(projectsPage, /ADDITIONAL_PROJECTS/);
   assert.match(projectsPage, /RESOURCES/);
+  assert.doesNotMatch(projectsPage, /projects-section-kicker/);
+  for (const oldHeading of [
+    "Research, engineering, and presentation",
+    "A map of the technical work",
+    "Technical evidence, organized by system",
+    "Smaller systems and prototypes",
+    "Signals around the work",
+    "Selected presentations and photographs",
+  ]) {
+    assert.equal(projectsPage.includes(oldHeading), false, `old Projects source heading remains: ${oldHeading}`);
+  }
   assert.match(projectsData, /export const AREAS/);
   assert.match(projectsData, /export const MAJOR_PROJECTS/);
   assert.match(projectsData, /export const ADDITIONAL_PROJECTS/);
@@ -396,6 +429,7 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(css, /@media\s*\(max-width:\s*780px\)[\s\S]*\.project-disclosure summary\s*\{[^}]*grid-template-columns:\s*27px\s+minmax\(0,\s*1fr\)/s);
   assert.match(css, /\.project-supplemental\s*\{[^}]*border-top:\s*1px\s+solid\s+var\(--line\)/s);
   assert.match(css, /\.resource-intro \.resource-context\s*\{[^}]*color:\s*var\(--warm-black\)[^}]*font-weight:\s*700/s);
+  assert.match(css, /\.projects-section-heading h2\s*\{[^}]*color:\s*var\(--accent\)[^}]*font-family:\s*var\(--sans\)[^}]*font-size:\s*0\.68rem[^}]*font-weight:\s*700[^}]*letter-spacing:\s*0\.16em/s);
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\.project-disclosure-icon\s*\{[^}]*transition:\s*none\s*!important/s);
   assert.match(css, /\.logo-track\s*\{[^}]*width:\s*100%[^}]*gap:\s*12px/s);
   assert.match(css, /\.logo-set\s*\{[^}]*width:\s*100%[^}]*flex:\s*1\s+1\s+auto[^}]*gap:\s*12px/s);
