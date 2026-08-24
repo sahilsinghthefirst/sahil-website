@@ -29,6 +29,8 @@ for (const file of [
   "index.rsc",
   "about.html",
   "about.rsc",
+  "projects.html",
+  "projects.rsc",
   "404.html",
   "sahil-singh-resume.pdf",
   "_next",

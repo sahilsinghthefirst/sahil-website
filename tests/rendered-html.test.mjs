@@ -105,6 +105,84 @@ test("server renders the Sahil portfolio", async () => {
   const heroSublead = aboutHtml.match(/<p class="about-sublead">([\s\S]*?)<\/p>/)?.[1] ?? "";
   const renderedBio = [stripMarkup(heroHeading), stripMarkup(heroSublead), renderedArticleBio].join("\n\n");
   assert.equal(createHash("sha256").update(normalizeBio(renderedBio)).digest("hex"), ABOUT_COPY_SHA256);
+  const projectsResponse = await render("/projects");
+  assert.equal(projectsResponse.status, 200);
+  assert.match(projectsResponse.headers.get("content-type") ?? "", /^text\/html\b/i);
+  const projectsHtml = await projectsResponse.text();
+  assert.match(projectsHtml, /<title>Project Portfolio — Sahil Singh<\/title>/i);
+  assert.match(projectsHtml, /<meta name="robots" content="[^"]*index[^"]*follow/i);
+  assert.match(projectsHtml, /<main class="projects-page" aria-labelledby="projects-title">/);
+  assert.match(projectsHtml, /<h1 id="projects-title">Project Portfolio<\/h1>/);
+  const projectsText = stripMarkup(projectsHtml);
+  assert.match(projectsHtml, /Current research direction: biomedical inverse modeling and computational cardiology, especially magnetic-field-based feature extraction for cardiovascular diagnosis\./);
+  const accurateKielApproach = "The pipeline generates simulated electrophysiology through the Bueno-Cherry-Fenton model using openCARP and CellML, converts electrical activity into magnetic-field structure through a Biot-Savart forward model, and uses the Kiel Cardio Database only as a reference for realistic MCG signal scale and sensor geometry, not as patient-derived training data. The inverse stage is driven by an iFNO / neural-operator model for feature extraction and localization.";
+  assert.ok(projectsText.includes(accurateKielApproach));
+  assert.doesNotMatch(projectsText, /using openCARP and CellML and the Kiel Cardio Database/);
+  for (const area of ["Biomedical ML", "Environmental sensing", "Forecasting and simulation", "Robotics and embedded systems", "Energy systems"]) {
+    assert.ok(projectsText.includes(area), `missing project area: ${area}`);
+  }
+  assert.equal((projectsHtml.match(/<details class="project-disclosure"/g) ?? []).length, 6);
+  for (const project of [
+    "Magnetoionography Framework for Cardiac Inverse Feature Extraction",
+    "Distributed Gas-Leak Source Localization System",
+    "Epidemic Forecasting Simulator - MIT Blueprint Hackathon",
+    "Passive Energy Generator for Edge IoT Devices",
+    "Autonomous Agriculture Drone",
+    "CubeSAT Power Subsystem",
+  ]) {
+    assert.ok(projectsText.includes(project), `missing major project: ${project}`);
+  }
+  for (const project of [
+    "IRIS AI Face Recognition Attendance System",
+    "Helios AI Door Lock",
+    "Smart Plant Monitoring System",
+    "Augmented Reality Smart Glasses Prototype",
+    "LEGO Mindstorms Rubik's Cube Solver",
+    "Custom FPV Drone Build",
+  ]) {
+    assert.ok(projectsText.includes(project), `missing additional project: ${project}`);
+  }
+  for (const application of [
+    "Maker labs with CNC machines, laser cutters, 3D printers, soldering stations, and resin printers.",
+    "Garages and workshops where CO2, particulate matter, fumes, or combustion products can accumulate.",
+    "Small to medium manufacturing lines where low-cost spatial sensing may be more feasible than industrial-grade imaging.",
+  ]) {
+    assert.ok(projectsText.includes(application), `missing potential application: ${application}`);
+  }
+  for (const recognition of [
+    "Fulton County Science and Engineering Fair qualifier 3/3 times",
+    "Thermo Fisher Scientific Junior Innovators Challenge Top 300",
+    "GaSTC state qualification from 6th-8th grade and 1st in category twice",
+    "Top 3 Speaker Award at Ivy Bridge Debate",
+  ]) {
+    assert.ok(projectsText.includes(recognition), `missing recognition: ${recognition}`);
+  }
+  for (const skill of ["Python", "C++", "PyTorch", "neural operators", "U-Net", "RNNs", "Monte Carlo dropout", "Raspberry Pi", "ESP32", "Arduino", "sensors", "soldering", "drones", "ArduPilot", "Tinkercad", "Blender", "technical writing"]) {
+    assert.ok(projectsText.includes(skill), `missing skill: ${skill}`);
+  }
+  for (const resource of [
+    "https://drive.google.com/drive/folders/1VuAYSX86NH_fakkvUtGWqohpPG2DmO-a?usp=sharing",
+    "https://view.genially.com/657b7b48e9579d00142e34ac/presentation-cops-cybersecurity-offline-protection-system",
+    "https://view.genially.com/65a5aa05b1978a00148b8fa1/presentation-2024-gastc-robotic-project-by-sahil-singh-iris",
+    "https://view.genially.com/63d329835a1b7a0019a60771/presentation-smart-system-by-sahil-singh",
+    "https://view.genially.com/63c308cd77385300175a2d7a/presentation-gastc-robotic-project-by-sahil",
+    "https://view.genially.com/67c10c9a987e743fe72eb508/presentation-gsef-2025-energy-harvester",
+  ]) {
+    assert.ok(projectsText.includes(resource), `missing resource URL: ${resource}`);
+    assert.ok(projectsHtml.includes(`href="${resource}"`), `resource URL is not an href: ${resource}`);
+  }
+  for (const statusSummary of ["Active research", "Prototype / concept complete", "Completed", "Recognized", "2nd place", "Active"]) {
+    assert.equal((projectsHtml.match(new RegExp(`<span class="project-status">${statusSummary.replace("/", "\\/")}<\\/span>`, "g")) ?? []).length, 1);
+  }
+  assert.equal((projectsHtml.match(/<span class="project-status">/g) ?? []).length, 6);
+  assert.match(projectsText, /Prototype\/project concept completed as one of the major ML systems in the portfolio;/);
+  assert.equal((projectsHtml.match(/<a class="resource-card"/g) ?? []).length, 6);
+  assert.match(projectsHtml, /<a class="resource-card"[^>]*target="_blank"[^>]*rel="noreferrer"/);
+  assert.match(projectsHtml, /<details class="project-disclosure" open="">/);
+  assert.match(projectsHtml, /<h3>Problem<\/h3>/);
+  assert.match(projectsHtml, /<h3>Approach<\/h3>/);
+  assert.match(projectsHtml, /<h3>Novel \/ technical contribution<\/h3>/);
+  assert.match(projectsHtml, /<h3>Status<\/h3>/);
   assert.match(html, /<title>Sahil Singh<\/title>/i);
   assert.match(html, /<a[^>]*href="\/"[^>]*class="brand"[^>]*aria-label="Sahil home"/);
   assert.match(html, /rel="icon"[^>]*href="\/favicon\.ico"/i);
@@ -112,7 +190,7 @@ test("server renders the Sahil portfolio", async () => {
   assert.match(html, /rel="apple-touch-icon"[^>]*href="\/favicon\.png"/i);
   assert.match(html, /hey, I[’']m Sahil(?!\.)/i);
   assert.match(html, /mailto:gensahilsingh@gmail\.com[^>]*>gensahilsingh@gmail\.com/);
-  assert.match(html, /<div class="quick-links[\s\S]*?<a class="mini-pill about-cta" href="\/about">\s*Read about me in detail\s*<span class="text-arrow"[^>]*>→\uFE0E<\/span>[\s\S]*?<span class="about-cta-break"[^>]*>[\s\S]*?<a class="mini-pill" href="#papers">/);
+  assert.match(html, /<div class="quick-links[\s\S]*?<a class="mini-pill about-cta" href="\/about">\s*Read about me in detail\s*<span class="text-arrow"[^>]*>→\uFE0E<\/span>[\s\S]*?<a class="mini-pill projects-cta" href="\/projects">\s*Project portfolio\s*<span class="text-arrow"[^>]*>→\uFE0E<\/span>[\s\S]*?<span class="about-cta-break"[^>]*>[\s\S]*?<a class="mini-pill" href="#papers">/);
   assert.doesNotMatch(html, /tel:\+17244574644|724-457-4644/);
   assert.match(html, /href="\/sahil-singh-resume\.pdf"[^>]*target="_blank"/i);
   assert.match(html, /<h2>Papers<\/h2>/);
@@ -161,10 +239,12 @@ test("server renders the Sahil portfolio", async () => {
 });
 
 test("keeps the final page free of starter preview infrastructure", async () => {
-  const [page, aboutPage, aboutCopy, layout, packageJson, css, nextConfig, vercelConfig, gitignore, readme, staticExport, qrSvg] = await Promise.all([
+  const [page, aboutPage, aboutCopy, projectsPage, projectsData, layout, packageJson, css, nextConfig, vercelConfig, gitignore, readme, staticExport, qrSvg] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/about/about-copy.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/projects/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/projects/projects-data.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
@@ -180,6 +260,8 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(page, /resume: "\/sahil-singh-resume\.pdf"/);
   assert.match(page, /className="mini-pill about-cta" href="\/about"/);
   assert.match(page, /Read about me in detail/);
+  assert.match(page, /className="mini-pill projects-cta" href="\/projects"/);
+  assert.match(page, /Project portfolio/);
   assert.match(page, /about-cta-break/);
   assert.match(aboutPage, /title:\s*"About Sahil"/);
   assert.match(aboutPage, /robots:\s*\{[\s\S]*index:\s*true[\s\S]*follow:\s*true/);
@@ -199,6 +281,22 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(aboutCopy, /Competitions & robotics/);
   assert.match(aboutCopy, /Hackathons/);
   assert.match(aboutCopy, /https:\/\/plume\.hackmit\.org\/project\/lwjjl-xrsqe-ucvue-rsqap/);
+  assert.match(projectsPage, /title:\s*"Project Portfolio — Sahil Singh"/);
+  assert.match(projectsPage, /robots:\s*\{[\s\S]*index:\s*true[\s\S]*follow:\s*true/);
+  assert.match(projectsPage, /MAJOR_PROJECTS/);
+  assert.match(projectsPage, /ADDITIONAL_PROJECTS/);
+  assert.match(projectsPage, /RESOURCES/);
+  assert.match(projectsData, /export const AREAS/);
+  assert.match(projectsData, /export const MAJOR_PROJECTS/);
+  assert.match(projectsData, /export const ADDITIONAL_PROJECTS/);
+  assert.match(projectsData, /export const RECOGNITION_GROUPS/);
+  assert.match(projectsData, /export const SKILLS/);
+  assert.match(projectsData, /export const RESOURCES/);
+  assert.match(projectsData, /statusSummary/);
+  assert.match(projectsData, /supplementalSections/);
+  assert.match(projectsData, /Potential applications/);
+  assert.match(projectsData, /uses the Kiel Cardio Database only as a reference for realistic MCG signal scale and sensor geometry, not as patient-derived training data/);
+  assert.match(projectsData, /Google Drive selected photographs/);
   assert.match(page, /id="papers"/);
   assert.match(layout, /title: "Sahil Singh"/);
   assert.match(layout, /icons:\s*\{[\s\S]*icon: "\/favicon\.ico"[\s\S]*shortcut: "\/favicon\.ico"[\s\S]*apple: "\/favicon\.png"/);
@@ -216,7 +314,7 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(packageJson, /"build":\s*"vite build && node scripts\/static-export\.mjs"/);
   assert.match(staticExport, /runPrerender/);
   assert.match(staticExport, /emitPrerenderPathManifest/);
-  assert.match(staticExport, /index\.html[\s\S]*index\.rsc[\s\S]*about\.html[\s\S]*about\.rsc[\s\S]*404\.html/);
+  assert.match(staticExport, /index\.html[\s\S]*index\.rsc[\s\S]*about\.html[\s\S]*about\.rsc[\s\S]*projects\.html[\s\S]*projects\.rsc[\s\S]*404\.html/);
   assert.match(nextConfig, /output:\s*["']export["']/);
   const vercel = JSON.parse(vercelConfig);
   assert.equal(vercel.$schema, "https://openapi.vercel.sh/vercel.json");
@@ -273,6 +371,16 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(css, /\.about-section p\s*\{[^}]*overflow-wrap:\s*anywhere/s);
   assert.match(css, /@media\s*\(max-width:\s*780px\)[\s\S]*\.about-layout\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s);
   assert.match(css, /@media\s*\(max-width:\s*780px\)[\s\S]*\.about-contents\s*\{[^}]*position:\s*static/s);
+  assert.match(css, /\.projects-layout\s*\{[^}]*grid-template-columns:\s*minmax\(160px,\s*220px\)\s+minmax\(0,\s*840px\)/s);
+  assert.match(css, /\.projects-index\s*\{[^}]*position:\s*sticky/s);
+  assert.match(css, /\.project-disclosure summary:focus-visible\s*\{[^}]*outline:\s*2px\s+solid\s+var\(--accent\)/s);
+  assert.match(css, /\.project-disclosure summary\s*\{[^}]*min-height:\s*90px[^}]*cursor:\s*pointer/s);
+  assert.match(css, /\.projects-content\s*\{[^}]*min-width:\s*0/s);
+  assert.match(css, /\.project-name\s*\{[^}]*overflow-wrap:\s*anywhere/s);
+  assert.match(css, /@media\s*\(max-width:\s*780px\)[\s\S]*\.projects-layout\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s);
+  assert.match(css, /@media\s*\(max-width:\s*780px\)[\s\S]*\.project-disclosure summary\s*\{[^}]*grid-template-columns:\s*27px\s+minmax\(0,\s*1fr\)/s);
+  assert.match(css, /\.project-supplemental\s*\{[^}]*border-top:\s*1px\s+solid\s+var\(--line\)/s);
+  assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\.project-disclosure-icon\s*\{[^}]*transition:\s*none\s*!important/s);
   assert.match(css, /\.logo-track\s*\{[^}]*width:\s*100%[^}]*gap:\s*12px/s);
   assert.match(css, /\.logo-set\s*\{[^}]*width:\s*100%[^}]*flex:\s*1\s+1\s+auto[^}]*gap:\s*12px/s);
   assert.match(css, /\.logo-set-clone\s*\{[^}]*display:\s*none/s);
@@ -318,4 +426,6 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   await access(new URL("../public/sahil-portfolio-qr.png", import.meta.url));
   await access(new URL("../dist/client/about.html", import.meta.url));
   await access(new URL("../dist/client/about.rsc", import.meta.url));
+  await access(new URL("../dist/client/projects.html", import.meta.url));
+  await access(new URL("../dist/client/projects.rsc", import.meta.url));
 });

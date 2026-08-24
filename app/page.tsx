@@ -123,6 +123,9 @@ export default function Home() {
             <a className="mini-pill about-cta" href="/about">
               Read about me in detail <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.right}</span>
             </a>
+            <a className="mini-pill projects-cta" href="/projects">
+              Project portfolio <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.right}</span>
+            </a>
             <span className="about-cta-break" aria-hidden="true" />
             <a className="mini-pill" href="#papers">
               Papers <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.down}</span>
