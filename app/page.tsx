@@ -118,6 +118,10 @@ export default function Home() {
             <a href="mailto:gensahilsingh@gmail.com">gensahilsingh@gmail.com</a>
           </div>
           <div className="quick-links reveal reveal-delay-2" aria-label="Portfolio links">
+            <a className="mini-pill about-cta" href="/about">
+              Read about me in detail <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.right}</span>
+            </a>
+            <span className="about-cta-break" aria-hidden="true" />
             <a className="mini-pill" href="#papers">
               Papers <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.down}</span>
             </a>

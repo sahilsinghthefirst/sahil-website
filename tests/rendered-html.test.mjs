@@ -2,13 +2,13 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
-async function render() {
+async function render(pathname = "/") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
-    new Request("http://localhost/", {
+    new Request(`http://localhost${pathname}`, {
       headers: { accept: "text/html" },
     }),
     {
@@ -29,10 +29,20 @@ test("server renders the Sahil portfolio", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
+  const aboutResponse = await render("/about");
+  assert.equal(aboutResponse.status, 200);
+  assert.match(aboutResponse.headers.get("content-type") ?? "", /^text\/html\b/i);
+  const aboutHtml = await aboutResponse.text();
+  assert.match(aboutHtml, /<title>About Sahil<\/title>/i);
+  assert.match(aboutHtml, /<meta name="robots" content="[^"]*noindex[^"]*nofollow/i);
+  assert.match(aboutHtml, /<main class="about-placeholder" aria-label="About Sahil">[\s\S]*<a[^>]*href="\/"[^>]*class="brand"/);
+  assert.equal((aboutHtml.match(/<a\s/g) ?? []).length, 1);
+  assert.doesNotMatch(aboutHtml, /biography|researcher|engineer|student|coming soon/i);
   assert.match(html, /<title>Sahil — Researcher, Engineer, Student<\/title>/i);
   assert.match(html, /rel="icon"[^>]*href="\/favicon\.svg"/i);
   assert.match(html, /hey, I[’']m Sahil(?!\.)/i);
   assert.match(html, /mailto:gensahilsingh@gmail\.com[^>]*>gensahilsingh@gmail\.com/);
+  assert.match(html, /<div class="quick-links[\s\S]*?<a class="mini-pill about-cta" href="\/about">\s*Read about me in detail\s*<span class="text-arrow"[^>]*>→\uFE0E<\/span>[\s\S]*?<span class="about-cta-break"[^>]*>[\s\S]*?<a class="mini-pill" href="#papers">/);
   assert.doesNotMatch(html, /tel:\+17244574644|724-457-4644/);
   assert.match(html, /href="\/sahil-singh-resume\.pdf"[^>]*target="_blank"/i);
   assert.match(html, /<h2>Papers<\/h2>/);
@@ -81,8 +91,9 @@ test("server renders the Sahil portfolio", async () => {
 });
 
 test("keeps the final page free of starter preview infrastructure", async () => {
-  const [page, layout, packageJson, css, nextConfig, vercelConfig, gitignore, readme, staticExport, qrSvg] = await Promise.all([
+  const [page, aboutPage, layout, packageJson, css, nextConfig, vercelConfig, gitignore, readme, staticExport, qrSvg] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
@@ -96,6 +107,13 @@ test("keeps the final page free of starter preview infrastructure", async () => 
 
   assert.match(page, /LINK_TARGETS/);
   assert.match(page, /resume: "\/sahil-singh-resume\.pdf"/);
+  assert.match(page, /className="mini-pill about-cta" href="\/about"/);
+  assert.match(page, /Read about me in detail/);
+  assert.match(page, /about-cta-break/);
+  assert.match(aboutPage, /title:\s*"About Sahil"/);
+  assert.match(aboutPage, /robots:\s*\{[\s\S]*index:\s*false[\s\S]*follow:\s*false/);
+  assert.match(aboutPage, /className="about-placeholder" aria-label="About Sahil"/);
+  assert.doesNotMatch(aboutPage, /biography|researcher|engineer|student|coming soon/i);
   assert.match(page, /id="papers"/);
   assert.match(layout, /title: "Sahil — Researcher, Engineer, Student"/);
   assert.match(layout, /icons:\s*\{[\s\S]*icon: "\/favicon\.svg"/);
@@ -113,7 +131,7 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(packageJson, /"build":\s*"vite build && node scripts\/static-export\.mjs"/);
   assert.match(staticExport, /runPrerender/);
   assert.match(staticExport, /emitPrerenderPathManifest/);
-  assert.match(staticExport, /index\.html[\s\S]*index\.rsc[\s\S]*404\.html/);
+  assert.match(staticExport, /index\.html[\s\S]*index\.rsc[\s\S]*about\.html[\s\S]*about\.rsc[\s\S]*404\.html/);
   assert.match(nextConfig, /output:\s*["']export["']/);
   const vercel = JSON.parse(vercelConfig);
   assert.equal(vercel.$schema, "https://openapi.vercel.sh/vercel.json");
@@ -121,6 +139,7 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.equal(vercel.installCommand, "npm ci");
   assert.equal(vercel.buildCommand, "npm run build");
   assert.equal(vercel.outputDirectory, "dist/client");
+  assert.equal(vercel.cleanUrls, true);
   assert.match(gitignore, /(^|\r?\n)\/output\/(\r?\n|$)/);
   assert.match(readme, /# Sahil Singh Portfolio/);
   assert.match(readme, /npm ci/);
@@ -157,6 +176,10 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.doesNotMatch(css, /\.papers-card h2/);
   assert.match(css, /\.work-card-link:focus-visible\s*\{[^}]*outline:\s*2px\s+solid\s+var\(--accent\)/s);
   assert.match(css, /\.work-card-link:hover \.card-link/);
+  assert.match(css, /\.about-cta\s*\{[^}]*background:\s*var\(--warm-black\)[^}]*color:\s*var\(--cream\)/s);
+  assert.match(css, /\.about-cta\s+span\s*\{[^}]*color:\s*#f1a67f/s);
+  assert.match(css, /\.about-cta-break\s*\{[^}]*display:\s*none/s);
+  assert.match(css, /@media\s*\(max-width:\s*780px\)[\s\S]*\.about-cta-break\s*\{[^}]*display:\s*block[^}]*flex-basis:\s*100%/s);
   assert.match(css, /\.logo-track\s*\{[^}]*width:\s*100%[^}]*gap:\s*12px/s);
   assert.match(css, /\.logo-set\s*\{[^}]*width:\s*100%[^}]*flex:\s*1\s+1\s+auto[^}]*gap:\s*12px/s);
   assert.match(css, /\.logo-set-clone\s*\{[^}]*display:\s*none/s);
@@ -184,4 +207,6 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   await access(new URL("../public/papers/bpc-fno-paper.pdf", import.meta.url));
   await access(new URL("../public/sahil-portfolio-qr.svg", import.meta.url));
   await access(new URL("../public/sahil-portfolio-qr.png", import.meta.url));
+  await access(new URL("../dist/client/about.html", import.meta.url));
+  await access(new URL("../dist/client/about.rsc", import.meta.url));
 });

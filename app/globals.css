@@ -302,6 +302,27 @@ a:focus-visible {
   color: var(--accent);
 }
 
+.about-cta {
+  border-color: var(--warm-black);
+  background: var(--warm-black);
+  color: var(--cream);
+}
+
+.about-cta span {
+  color: #f1a67f;
+}
+
+.about-cta:hover,
+.about-cta:focus-visible {
+  border-color: var(--warm-black);
+  background: var(--warm-black);
+  color: var(--cream);
+}
+
+.about-cta-break {
+  display: none;
+}
+
 .text-arrow {
   font-family: var(--sans);
   font-variant-emoji: text;
@@ -840,6 +861,11 @@ a:focus-visible {
   padding: 16px 0;
 }
 
+.about-placeholder {
+  min-height: 100dvh;
+  padding: 24px;
+}
+
 .footer-line {
   display: flex;
   align-items: center;
@@ -904,6 +930,13 @@ a:focus-visible {
 }
 
 @media (max-width: 780px) {
+  .about-cta-break {
+    display: block;
+    flex-basis: 100%;
+    width: 0;
+    height: 0;
+  }
+
   .site-shell {
     width: min(100% - 32px, 1320px);
   }

@@ -27,6 +27,8 @@ const outputDirectory = path.join(root, "dist", "client");
 for (const file of [
   "index.html",
   "index.rsc",
+  "about.html",
+  "about.rsc",
   "404.html",
   "sahil-singh-resume.pdf",
   "_next",
