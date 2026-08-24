@@ -172,7 +172,7 @@ export const MAJOR_PROJECTS: readonly MajorProject[] = [
     problem:
       "CubeSAT power budgets require careful modeling of generation, storage, duty cycles, and subsystem load. Even small errors can cause mission-level instability.",
     approach:
-      "As one of the heads of the school CubeSAT power subsystem team, the work focuses on power simulation, analysis, and a research paper that will be presented at the NCSS Student Research Conference in Summer 2026.",
+      "As one of the heads of the school CubeSAT power subsystem team, the work focuses on power simulation, analysis, and a research paper that was presented at SmallSat 2026 and NCSS Student Research Conference 2026.",
     contribution:
       "The contribution is leadership plus technical simulation: translating engineering requirements into a model that can guide subsystem decisions.",
     status: "Active. Preparing paper and presentation.",

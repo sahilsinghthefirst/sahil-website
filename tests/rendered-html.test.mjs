@@ -125,6 +125,11 @@ test("server renders the Sahil portfolio", async () => {
   const accurateKielApproach = "The pipeline generates simulated electrophysiology through the Bueno-Cherry-Fenton model using openCARP and CellML, converts electrical activity into magnetic-field structure through a Biot-Savart forward model, and uses the Kiel Cardio Database only as a reference for realistic MCG signal scale and sensor geometry, not as patient-derived training data. The inverse stage is driven by an iFNO / neural-operator model for feature extraction and localization.";
   assert.ok(projectsText.includes(accurateKielApproach));
   assert.doesNotMatch(projectsText, /using openCARP and CellML and the Kiel Cardio Database/);
+  const oldCubesatApproach = ", and a research paper that will be presented at the NCSS Student Research Conference in Summer 2026.";
+  const newCubesatApproach = ", and a research paper that was presented at SmallSat 2026 and NCSS Student Research Conference 2026.";
+  const newCubesatApproachText = `As one of the heads of the school CubeSAT power subsystem team, the work focuses on power simulation, analysis${newCubesatApproach}`;
+  assert.equal(projectsHtml.split(`<h3>Approach</h3><p>${newCubesatApproachText}</p>`).length - 1, 1);
+  assert.equal(projectsText.includes(oldCubesatApproach), false);
   for (const area of ["Biomedical ML", "Environmental sensing", "Forecasting and simulation", "Robotics and embedded systems", "Energy systems"]) {
     assert.ok(projectsText.includes(area), `missing project area: ${area}`);
   }
@@ -303,6 +308,8 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(projectsData, /supplementalSections/);
   assert.match(projectsData, /Potential applications/);
   assert.match(projectsData, /uses the Kiel Cardio Database only as a reference for realistic MCG signal scale and sensor geometry, not as patient-derived training data/);
+  assert.match(projectsData, /a research paper that was presented at SmallSat 2026 and NCSS Student Research Conference 2026/);
+  assert.doesNotMatch(projectsData, /a research paper that will be presented at the NCSS Student Research Conference in Summer 2026/);
   assert.match(projectsData, /These links and projects are from middle school\./);
   assert.match(projectsData, /Google Drive selected photographs/);
   assert.match(page, /id="papers"/);
