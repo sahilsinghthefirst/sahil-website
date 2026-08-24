@@ -74,7 +74,7 @@ test("server renders the Sahil portfolio", async () => {
   const heroSublead = aboutHtml.match(/<p class="about-sublead">([\s\S]*?)<\/p>/)?.[1] ?? "";
   const renderedBio = [stripMarkup(heroHeading), stripMarkup(heroSublead), renderedArticleBio].join("\n\n");
   assert.equal(createHash("sha256").update(normalizeBio(renderedBio)).digest("hex"), ABOUT_COPY_SHA256);
-  assert.match(html, /<title>Sahil — Researcher, Engineer, Student<\/title>/i);
+  assert.match(html, /<title>Sahil Singh<\/title>/i);
   assert.match(html, /<a[^>]*href="\/"[^>]*class="brand"[^>]*aria-label="Sahil home"/);
   assert.match(html, /rel="icon"[^>]*href="\/favicon\.ico"/i);
   assert.match(html, /rel="shortcut icon"[^>]*href="\/favicon\.ico"/i);
@@ -169,7 +169,7 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(aboutCopy, /Hackathons/);
   assert.match(aboutCopy, /https:\/\/plume\.hackmit\.org\/project\/lwjjl-xrsqe-ucvue-rsqap/);
   assert.match(page, /id="papers"/);
-  assert.match(layout, /title: "Sahil — Researcher, Engineer, Student"/);
+  assert.match(layout, /title: "Sahil Singh"/);
   assert.match(layout, /icons:\s*\{[\s\S]*icon: "\/favicon\.ico"[\s\S]*shortcut: "\/favicon\.ico"[\s\S]*apple: "\/favicon\.png"/);
   assert.doesNotMatch(page, /#about|#resume|Coming soon|Keep in touch|Say hello/);
   assert.doesNotMatch(page, /tel:\+17244574644|724-457-4644/);
