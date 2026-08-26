@@ -31,6 +31,8 @@ for (const file of [
   "about.rsc",
   "projects.html",
   "projects.rsc",
+  "owner-analytics.html",
+  "owner-analytics.rsc",
   "404.html",
   "sahil-singh-resume.pdf",
   "_next",

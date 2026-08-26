@@ -1816,6 +1816,66 @@ a:focus-visible {
   color: var(--accent);
 }
 
+.owner-analytics-page {
+  width: min(calc(100% - 48px), 680px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 24px 0 72px;
+}
+
+.owner-analytics-home {
+  justify-self: start;
+}
+
+.owner-analytics-card {
+  margin-top: clamp(86px, 14vw, 160px);
+  border: 1px solid var(--line);
+  padding: clamp(28px, 5vw, 56px);
+  background: color-mix(in srgb, var(--cream-deep) 24%, transparent);
+}
+
+.owner-analytics-card h1 {
+  max-width: 520px;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 6vw, 4.4rem);
+  font-weight: 400;
+  letter-spacing: -0.065em;
+  line-height: 0.98;
+}
+
+.owner-analytics-copy {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+.owner-analytics-reset {
+  appearance: none;
+  margin-top: 26px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.owner-analytics-reset:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+@media (max-width: 780px) {
+  .owner-analytics-page {
+    width: min(calc(100% - 32px), 680px);
+    padding-top: 16px;
+  }
+
+  .owner-analytics-card {
+    margin-top: 78px;
+    padding: 28px 22px 32px;
+  }
+}
+
 @media (max-width: 780px) {
   .projects-page {
     width: min(100% - 32px, 1180px);

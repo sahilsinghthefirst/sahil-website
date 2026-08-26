@@ -478,4 +478,64 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   await access(new URL("../dist/client/about.rsc", import.meta.url));
   await access(new URL("../dist/client/projects.html", import.meta.url));
   await access(new URL("../dist/client/projects.rsc", import.meta.url));
+  await access(new URL("../dist/client/owner-analytics.html", import.meta.url));
+  await access(new URL("../dist/client/owner-analytics.rsc", import.meta.url));
+});
+
+test("gates Vercel analytics and protects the private owner preferences route", async () => {
+  const [analytics, layout, ownerPage, ownerPanel, packageJson, staticExport, css] = await Promise.all([
+    readFile(new URL("../app/analytics.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/owner-analytics/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/owner-analytics/owner-analytics-panel.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../package.json", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/static-export.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(packageJson, /"@vercel\/analytics":\s*"\^2\.0\.1"/);
+  assert.match(layout, /import VercelAnalytics from "\.\/analytics"/);
+  assert.match(layout, /<VercelAnalytics\s*\/>/);
+  assert.match(analytics, /"use client"/);
+  assert.match(analytics, /from "@vercel\/analytics\/react"/);
+  assert.match(analytics, /<Analytics beforeSend=\{beforeSend\}\s*\/>/);
+  assert.match(analytics, /normalized\.length > "\.vercel\.app"\.length && normalized\.endsWith\("\.vercel\.app"\)/);
+  assert.doesNotMatch(analytics, /hostname\.includes\("vercel\.app"\)/);
+  assert.match(analytics, /OWNER_ANALYTICS_OPT_OUT_KEY\s*=\s*"sahil-owner-analytics-opt-out-v1"/);
+  assert.match(analytics, /OWNER_ANALYTICS_ROUTE\s*=\s*"\/owner-analytics"/);
+  assert.match(analytics, /isOwnerAnalyticsPath\(window\.location\.pathname\)/);
+  assert.match(analytics, /return hasOwnerOptOut\(\) \? null : event/);
+  assert.match(analytics, /return null/);
+  assert.match(analytics, /catch \{[\s\S]*return false/);
+
+  assert.match(ownerPage, /title:\s*"Not found — Sahil Singh"/);
+  assert.match(ownerPage, /robots:\s*\{[\s\S]*index:\s*false[\s\S]*follow:\s*false/);
+  assert.match(ownerPage, /owner-analytics-page/);
+  assert.match(ownerPanel, /new URL\(window\.location\.href\)/);
+  assert.match(ownerPanel, /searchParams\.get\("token"\)/);
+  assert.match(ownerPanel, /searchParams\.delete\("token"\)/);
+  assert.match(ownerPanel, /history\.replaceState\(/);
+  assert.match(ownerPanel, /window\.crypto\.subtle\.digest\("SHA-256"/);
+  assert.match(ownerPanel, /28dfe1cc3a47bbcb742af2d3e099972f91d773faa4b7df8e831a23aed44304ff/);
+  assert.match(ownerPanel, /localStorage\.setItem\(OWNER_ANALYTICS_OPT_OUT_KEY/);
+  assert.match(ownerPanel, /localStorage\.removeItem\(OWNER_ANALYTICS_OPT_OUT_KEY/);
+  assert.match(ownerPanel, /Not found/);
+  assert.match(ownerPanel, /Analytics paused for this browser/);
+  assert.match(ownerPanel, /Count this browser again/);
+  assert.doesNotMatch(ownerPanel, /[?&]token=[^"'`\s]+/);
+  assert.match(staticExport, /owner-analytics\.html[\s\S]*owner-analytics\.rsc/);
+  assert.match(css, /\.owner-analytics-page\s*\{/);
+  assert.match(css, /\.owner-analytics-reset\s*\{[\s\S]*appearance:\s*none/);
+
+  const ownerResponse = await render("/owner-analytics");
+  assert.equal(ownerResponse.status, 200);
+  const ownerHtml = await ownerResponse.text();
+  assert.match(ownerHtml, /<title>Not found — Sahil Singh<\/title>/);
+  assert.match(ownerHtml, /<meta name="robots" content="noindex, nofollow"\/>/);
+  assert.match(ownerHtml, /<main class="owner-analytics-page"/);
+  assert.match(ownerHtml, /<h1 id="owner-analytics-title">Not found<\/h1>/);
+
+  const homeResponse = await render();
+  const homeHtml = await homeResponse.text();
+  assert.doesNotMatch(homeHtml, /href="\/owner-analytics"/);
 });
