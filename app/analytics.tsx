@@ -1,7 +1,7 @@
 "use client";
 
-import { Analytics } from "@vercel/analytics/react";
-import type { BeforeSendEvent } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
+import type { BeforeSendEvent } from "@vercel/analytics";
 
 export const OWNER_ANALYTICS_OPT_OUT_KEY = "sahil-owner-analytics-opt-out-v1";
 export const OWNER_ANALYTICS_OPT_OUT_VALUE = "1";

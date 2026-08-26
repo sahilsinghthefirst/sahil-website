@@ -497,7 +497,9 @@ test("gates Vercel analytics and protects the private owner preferences route", 
   assert.match(layout, /import VercelAnalytics from "\.\/analytics"/);
   assert.match(layout, /<VercelAnalytics\s*\/>/);
   assert.match(analytics, /"use client"/);
-  assert.match(analytics, /from "@vercel\/analytics\/react"/);
+  assert.match(analytics, /from "@vercel\/analytics\/next"/);
+  assert.match(analytics, /BeforeSendEvent.*from "@vercel\/analytics"/);
+  assert.doesNotMatch(analytics, /@vercel\/analytics\/react/);
   assert.match(analytics, /<Analytics beforeSend=\{beforeSend\}\s*\/>/);
   assert.match(analytics, /normalized\.length > "\.vercel\.app"\.length && normalized\.endsWith\("\.vercel\.app"\)/);
   assert.doesNotMatch(analytics, /hostname\.includes\("vercel\.app"\)/);
