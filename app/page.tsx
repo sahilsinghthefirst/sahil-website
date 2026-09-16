@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 export const LINK_TARGETS = {
-  papers: "https://saidlaboratory.github.io/GEML/",
   resume: "/sahil-singh-resume.pdf",
   linkedin: "https://www.linkedin.com/in/sahil-singh-17a641239",
 } as const;
@@ -63,6 +62,12 @@ const affiliations: Affiliation[] = [
     shortName: "Fulton Science Academy",
     src: "/assets/fulton-science-academy.png",
     alt: "Fulton Science Academy",
+  },
+  {
+    name: "MIT Space Telecommunications, Astronomy and Radiation Laboratory",
+    shortName: "MIT STAR Lab",
+    src: "/assets/mit-logo.png",
+    alt: "MIT",
   },
 ];
 
@@ -173,15 +178,12 @@ export default function Home() {
               <details className="paper-disclosure">
                 <summary>
                   <span className="paper-name">GEML</span>
-                  <span className="paper-status">Pending EMNLP MathNLP submission</span>
+                  <span className="paper-status">Pending NeurIPS VeriCodeGen submission</span>
                   <span className="summary-icon" aria-hidden="true">+</span>
                 </summary>
                 <div className="paper-panel">
                   <a href="/papers/geml-paper.pdf" target="_blank" rel="noreferrer">
                     Paper <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
-                  </a>
-                  <a href={LINK_TARGETS.papers} target="_blank" rel="noreferrer">
-                    Project page <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
                   </a>
                   <a href="https://github.com/saidlaboratory/GEML" target="_blank" rel="noreferrer">
                     GitHub repository <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
@@ -200,10 +202,36 @@ export default function Home() {
                   </a>
                 </div>
               </details>
-              <div className="paper-static">
-                <span className="paper-static-status">In Progress</span>
-                <span className="paper-static-title">World Model Occlusion Paper (with Algoverse)</span>
-              </div>
+              <details className="paper-disclosure">
+                <summary>
+                  <span className="paper-name">MineOcclude</span>
+                  <span className="paper-status">Pending NeurIPS PhysWorldAI submission</span>
+                  <span className="summary-icon" aria-hidden="true">+</span>
+                </summary>
+                <div className="paper-panel">
+                  <a href="/papers/mineocclude-paper.pdf" target="_blank" rel="noreferrer">
+                    Paper <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
+                  </a>
+                  <a href="https://github.com/atharv-santosh/MineOcclude" target="_blank" rel="noreferrer">
+                    GitHub repository <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
+                  </a>
+                </div>
+              </details>
+              <details className="paper-disclosure">
+                <summary>
+                  <span className="paper-name">MIG-PINO</span>
+                  <span className="paper-status">Pending NeurIPS ICBINB-BIO submission</span>
+                  <span className="summary-icon" aria-hidden="true">+</span>
+                </summary>
+                <div className="paper-panel">
+                  <a href="/papers/mig-pino-paper.pdf" target="_blank" rel="noreferrer">
+                    Paper <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
+                  </a>
+                  <a href="https://anonymous.4open.science/r/cardiac-field-localization-benchmark-E810" target="_blank" rel="noreferrer">
+                    Code repository <span className="text-arrow" aria-hidden="true">{TEXT_ARROWS.external}</span>
+                  </a>
+                </div>
+              </details>
             </div>
           </article>
           {workLinks.map((item) => (

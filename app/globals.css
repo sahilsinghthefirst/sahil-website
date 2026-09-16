@@ -840,6 +840,11 @@ a:focus-visible {
   height: 54px;
 }
 
+.logo-mit-star-lab {
+  width: 92px;
+  height: 62px;
+}
+
 .logo-name {
   color: var(--muted);
   font-size: 0.68rem;
