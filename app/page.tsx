@@ -34,6 +34,12 @@ type Affiliation = {
 
 const affiliations: Affiliation[] = [
   {
+    name: "MIT Space Telecommunications, Astronomy and Radiation Laboratory",
+    shortName: "MIT STAR Lab",
+    src: "/assets/mit-logo.png",
+    alt: "MIT",
+  },
+  {
     name: "Rochester Institute of Technology",
     shortName: "RIT",
     wordmark: "RIT",
@@ -62,12 +68,6 @@ const affiliations: Affiliation[] = [
     shortName: "Fulton Science Academy",
     src: "/assets/fulton-science-academy.png",
     alt: "Fulton Science Academy",
-  },
-  {
-    name: "MIT Space Telecommunications, Astronomy and Radiation Laboratory",
-    shortName: "MIT STAR Lab",
-    src: "/assets/mit-logo.png",
-    alt: "MIT",
   },
 ];
 

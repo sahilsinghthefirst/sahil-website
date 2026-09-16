@@ -267,6 +267,7 @@ test("server renders the Sahil portfolio", async () => {
   assert.doesNotMatch(html, /In Progress|World Model Occlusion Paper \(with Algoverse\)/);
   assert.match(html, /MIT STAR Lab/);
   assert.match(html, /src="\/assets\/mit-logo\.png"/);
+  assert.ok(html.indexOf("MIT STAR Lab") < html.indexOf(">RIT<"));
   assert.match(html, /https:\/\/www\.linkedin\.com\/in\/sahil-singh-17a641239/);
   assert.match(html, /assets\/ptmc-badge\.png/);
   assert.match(html, /assets\/korucusat-2\.png/);
