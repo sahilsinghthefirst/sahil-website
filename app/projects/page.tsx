@@ -116,7 +116,7 @@ export default function ProjectsPage() {
 
           <section id="major-projects" className="projects-section" aria-labelledby="major-projects-title">
             <div className="projects-section-heading">
-              <h2 id="major-projects-title">Six major projects</h2>
+              <h2 id="major-projects-title">Eight major projects</h2>
             </div>
             <div className="major-project-list">
               {MAJOR_PROJECTS.map((project, index) => (

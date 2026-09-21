@@ -15,7 +15,12 @@ export const AREAS = [
   {
     area: "Biomedical ML",
     examples:
-      "Magnetoionography, iFNO cardiac inverse feature extraction, BOCF/openCARP simulation, uncertainty-aware benchmarking",
+      "Magnetoionography, iFNO cardiac inverse feature extraction, BOCF/openCARP simulation, S1–S2 scar-substrate analysis, uncertainty-aware benchmarking",
+  },
+  {
+    area: "Geospatial AI",
+    examples:
+      "SkyScraper satellite-imagery event validation with MIT STAR Lab",
   },
   {
     area: "Environmental sensing",
@@ -178,6 +183,66 @@ export const MAJOR_PROJECTS: readonly MajorProject[] = [
     status: "Active. Preparing paper and presentation.",
     statusSummary: "Active",
   },
+  {
+    number: "07",
+    id: "rit-opencarp-s1s2",
+    name: "RIT openCARP S1–S2 Scar-Substrate Study",
+    subtitle: "Cardiac Electrophysiology Simulation and Re-entry Analysis",
+    tags: ["RIT research", "openCARP", "TP06 monodomain", "S1–S2 protocol"],
+    problem:
+      "Scar and remodeled border-zone tissue can create asymmetric conduction pathways that may support re-entry. The study tested where a premature S2 stimulus captures tissue, how activation travels around a scar substrate, and whether the resulting activity becomes sustained.",
+    approach:
+      "The study used a 40 × 40 mm TP06 monodomain sheet in openCARP with healthy, remodeled border-zone, and near-insulating scar regions. It swept 19 coupling intervals from 250–420 ms, refined the capture boundary at 1 ms resolution, and extended a selected 380 ms case to 1.6 seconds for directional and persistence analysis.",
+    contribution:
+      "The work built a reproducible simulation and analysis pipeline for capture, propagation coverage, scar-ring activation, directional delay, repeated activation, and late activity. The selected case produced a 46 ms directional delay and activated all 24 scar-ring sectors while preserving a strict distinction between transient asymmetric propagation and sustained re-entry.",
+    status:
+      "Validated study complete. The protocol-specific capture boundary was 368–369 ms; the selected case was a credible transient unidirectional-block candidate, but it did not sustain re-entry or VT.",
+    statusSummary: "Validated study",
+    technicalStack: [
+      {
+        label: "Simulation",
+        items: "openCARP, ten Tusscher–Panfilov 2006, monodomain tissue, scar and border-zone remodeling.",
+      },
+      {
+        label: "Analysis",
+        items: "Coupling-interval sweeps, activation mapping, scar-ring sector timing, repeat-activation and late-activity tests.",
+      },
+      {
+        label: "Outputs",
+        items: "Validated parameter file, reproducible Docker workflow, quantitative summaries, and supervisor-ready figures.",
+      },
+    ],
+  },
+  {
+    number: "08",
+    id: "mit-star-lab-skyscraper",
+    name: "SkyScraper Satellite-Imagery Event Validation",
+    subtitle: "MIT STAR Lab Human Validation Pipeline",
+    tags: ["MIT STAR Lab", "geospatial AI", "satellite imagery", "human-in-the-loop validation"],
+    problem:
+      "Turning news-reported events into useful remote-sensing datasets requires more than matching a location and date. Each candidate must be checked to determine whether the claimed event is actually visible in the satellite imagery and whether the proposed temporal window is accurate.",
+    approach:
+      "The SkyScraper workflow extracts event locations and timelines from news, gathers temporal satellite imagery, and uses model-assisted verification before human review. The validation work examines the article context, location, and image sequence; records Yes, No, or Unsure visibility decisions; corrects first and last visible dates; and documents ambiguous cases.",
+    contribution:
+      "The human-validation stage provides quality control for a large-scale geospatial data pipeline. Careful visibility judgments and date corrections help separate visually supported events from plausible but unsupported matches, creating stronger training and evaluation data for remote-sensing models.",
+    status:
+      "Active work with the MIT STAR Lab SkyScraper team, focused on satellite-imagery review, annotation consistency, and quality control.",
+    statusSummary: "Active at MIT STAR Lab",
+    technicalStack: [
+      {
+        label: "Validation",
+        items: "Temporal satellite-imagery review, event visibility labels, date-boundary correction, and annotation notes.",
+      },
+      {
+        label: "Tooling",
+        items: "Python, Streamlit, structured metadata, and CSV-based review feedback.",
+      },
+      {
+        label: "Research context",
+        items: "Human-in-the-loop verification for news-derived geospatial event sequences and remote-sensing datasets.",
+      },
+    ],
+  },
 ] as const;
 
 export const ADDITIONAL_PROJECTS = [
@@ -244,6 +309,8 @@ export const SKILLS = [
   "Tinkercad",
   "Blender",
   "technical writing",
+  "openCARP",
+  "geospatial data validation",
 ] as const;
 
 export const RESOURCES = [

@@ -116,7 +116,7 @@ test("server renders the Sahil portfolio", async () => {
   const sectionHeadings = [
     ["snapshot-title", "Current direction"],
     ["areas-title", "Area / Examples in this portfolio"],
-    ["major-projects-title", "Six major projects"],
+    ["major-projects-title", "Eight major projects"],
     ["additional-projects-title", "Additional selected projects"],
     ["recognition-title", "Recognition and technical profile"],
     ["resources-title", "Resources"],
@@ -152,10 +152,10 @@ test("server renders the Sahil portfolio", async () => {
   const newCubesatApproachText = `As one of the heads of the school CubeSAT power subsystem team, the work focuses on power simulation, analysis${newCubesatApproach}`;
   assert.equal(projectsHtml.split(`<h3>Approach</h3><p>${newCubesatApproachText}</p>`).length - 1, 1);
   assert.equal(projectsText.includes(oldCubesatApproach), false);
-  for (const area of ["Biomedical ML", "Environmental sensing", "Forecasting and simulation", "Robotics and embedded systems", "Energy systems"]) {
+  for (const area of ["Biomedical ML", "Geospatial AI", "Environmental sensing", "Forecasting and simulation", "Robotics and embedded systems", "Energy systems"]) {
     assert.ok(projectsText.includes(area), `missing project area: ${area}`);
   }
-  assert.equal((projectsHtml.match(/<details class="project-disclosure"/g) ?? []).length, 6);
+  assert.equal((projectsHtml.match(/<details class="project-disclosure"/g) ?? []).length, 8);
   for (const project of [
     "Magnetoionography Framework for Cardiac Inverse Feature Extraction",
     "Distributed Gas-Leak Source Localization System",
@@ -163,6 +163,8 @@ test("server renders the Sahil portfolio", async () => {
     "Passive Energy Generator for Edge IoT Devices",
     "Autonomous Agriculture Drone",
     "CubeSAT Power Subsystem",
+    "RIT openCARP S1–S2 Scar-Substrate Study",
+    "SkyScraper Satellite-Imagery Event Validation",
   ]) {
     assert.ok(projectsText.includes(project), `missing major project: ${project}`);
   }
@@ -205,10 +207,10 @@ test("server renders the Sahil portfolio", async () => {
     assert.ok(projectsText.includes(resource), `missing resource URL: ${resource}`);
     assert.ok(projectsHtml.includes(`href="${resource}"`), `resource URL is not an href: ${resource}`);
   }
-  for (const statusSummary of ["Active research", "Prototype / concept complete", "Completed", "Recognized", "2nd place", "Active"]) {
+  for (const statusSummary of ["Active research", "Prototype / concept complete", "Completed", "Recognized", "2nd place", "Active", "Validated study", "Active at MIT STAR Lab"]) {
     assert.equal((projectsHtml.match(new RegExp(`<span class="project-status">${statusSummary.replace("/", "\\/")}<\\/span>`, "g")) ?? []).length, 1);
   }
-  assert.equal((projectsHtml.match(/<span class="project-status">/g) ?? []).length, 6);
+  assert.equal((projectsHtml.match(/<span class="project-status">/g) ?? []).length, 8);
   assert.match(projectsText, /Prototype\/project concept completed as one of the major ML systems in the portfolio;/);
   assert.equal((projectsHtml.match(/<a class="resource-card"/g) ?? []).length, 6);
   assert.match(projectsHtml, /<a class="resource-card"[^>]*target="_blank"[^>]*rel="noreferrer"/);
@@ -353,6 +355,8 @@ test("keeps the final page free of starter preview infrastructure", async () => 
   assert.match(projectsData, /uses the Kiel Cardio Database only as a reference for realistic MCG signal scale and sensor geometry, not as patient-derived training data/);
   assert.match(projectsData, /a research paper that was presented at SmallSat 2026 and NCSS Student Research Conference 2026/);
   assert.doesNotMatch(projectsData, /a research paper that will be presented at the NCSS Student Research Conference in Summer 2026/);
+  assert.match(projectsData, /credible transient unidirectional-block candidate, but it did not sustain re-entry or VT/);
+  assert.match(projectsData, /Active work with the MIT STAR Lab SkyScraper team/);
   assert.match(projectsData, /These links and projects are from middle school\./);
   assert.match(projectsData, /Google Drive selected photographs/);
   assert.match(page, /id="papers"/);
