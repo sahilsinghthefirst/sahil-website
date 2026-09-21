@@ -99,92 +99,36 @@ export const MAJOR_PROJECTS: readonly MajorProject[] = [
   },
   {
     number: "02",
-    id: "gas-localization",
-    name: "Distributed Gas-Leak Source Localization System",
-    subtitle: "IoT Sensor Graph for Unsafe Gas Localization",
-    tags: ["ESP32 sensor network", "Raspberry Pi 5 cluster", "lightweight U-Net inverse reconstruction"],
+    id: "mit-star-lab-skyscraper",
+    name: "SkyScraper Satellite-Imagery Event Validation",
+    subtitle: "MIT STAR Lab Human Validation Pipeline",
+    tags: ["MIT STAR Lab", "geospatial AI", "satellite imagery", "human-in-the-loop validation"],
     problem:
-      "Unsafe gases and particulate concentrations can be invisible and odorless, making manual source identification unreliable in maker labs, garages, workshops, and small manufacturing lines.",
+      "Turning news-reported events into useful remote-sensing datasets requires more than matching a location and date. Each candidate must be checked to determine whether the claimed event is actually visible in the satellite imagery and whether the proposed temporal window is accurate.",
     approach:
-      "The system uses a graph of distributed sensor nodes, each powered by a central ESP32-style microcontroller architecture and equipped with sensors such as PM2.5 and CO2. Sensor readings are fused on a central cluster of two Raspberry Pi 5 units. A lightweight U-Net performs partial, feature-focused inverse reconstruction to estimate high-concentration regions and likely source zones.",
+      "The SkyScraper workflow extracts event locations and timelines from news, gathers temporal satellite imagery, and uses model-assisted verification before human review. The validation work examines the article context, location, and image sequence; records Yes, No, or Unsure visibility decisions; corrects first and last visible dates; and documents ambiguous cases.",
     contribution:
-      "The key novelty is modular expansion: more sensing nodes can be added to increase coverage without changing the core reconstruction concept. This makes the system more practical for real environments than a single-point detector, because the model learns spatial structure rather than just thresholding one sensor.",
+      "The human-validation stage provides quality control for a large-scale geospatial data pipeline. Careful visibility judgments and date corrections help separate visually supported events from plausible but unsupported matches, creating stronger training and evaluation data for remote-sensing models.",
     status:
-      "Prototype/project concept completed as one of the major ML systems in the portfolio; suitable for further testing in controlled lab or workshop environments.",
-    statusSummary: "Prototype / concept complete",
-    supplementalSections: [
+      "Active work with the MIT STAR Lab SkyScraper team, focused on satellite-imagery review, annotation consistency, and quality control.",
+    statusSummary: "Active at MIT STAR Lab",
+    technicalStack: [
       {
-        label: "Potential applications",
-        items: [
-          "Maker labs with CNC machines, laser cutters, 3D printers, soldering stations, and resin printers.",
-          "Garages and workshops where CO2, particulate matter, fumes, or combustion products can accumulate.",
-          "Small to medium manufacturing lines where low-cost spatial sensing may be more feasible than industrial-grade imaging.",
-        ],
+        label: "Validation",
+        items: "Temporal satellite-imagery review, event visibility labels, date-boundary correction, and annotation notes.",
+      },
+      {
+        label: "Tooling",
+        items: "Python, Streamlit, structured metadata, and CSV-based review feedback.",
+      },
+      {
+        label: "Research context",
+        items: "Human-in-the-loop verification for news-derived geospatial event sequences and remote-sensing datasets.",
       },
     ],
   },
   {
     number: "03",
-    id: "epidemic-simulator",
-    name: "Epidemic Forecasting Simulator - MIT Blueprint Hackathon",
-    subtitle: "RNN + SEIR Disease-Spread Simulator",
-    tags: ["Hackathon project", "forecasting", "uncertainty-aware simulation"],
-    problem:
-      "Public-health forecasting requires both predictive models and uncertainty estimates. A raw prediction is less useful if it cannot communicate confidence or scenario variability.",
-    approach:
-      "The project used an RNN to forecast disease spread from 7,300 past outbreak records, including COVID-19, dengue, malaria, measles, and related outbreaks. It incorporated a SEIR simulation engine to represent disease-state transitions and Monte Carlo dropout/simulation for confidence-aware outputs.",
-    contribution:
-      "The project combined data-driven forecasting with epidemiological structure, giving the system a more interpretable simulation layer than a simple black-box predictor.",
-    status: "Completed for MIT Blueprint hackathon; serves as an example of applied ML under time constraints.",
-    statusSummary: "Completed",
-  },
-  {
-    number: "04",
-    id: "passive-energy-generator",
-    name: "Passive Energy Generator for Edge IoT Devices",
-    subtitle: "Optimized Passive Energy Harvester",
-    tags: ["Piezoelectricity", "triboelectricity", "sound/vibration/EMF capture"],
-    problem:
-      "Small IoT systems often need long-duration, low-maintenance power. Environmental energy sources such as vibration, sound, electrostatic changes, and electromagnetic frequency are usually wasted at small scales.",
-    approach:
-      "The project explored piezoelectric and triboelectric conversion, pressure-plate geometries, vibration mechanisms, and multi-source energy capture. It was designed as an edge-IoT power concept rather than a high-power generator.",
-    contribution:
-      "The novel contributions included a custom pressure-plate design and vibration mechanism intended to improve mechanical coupling into the energy-harvesting elements.",
-    status: "Recognized at GSEF with Best in Category and a creative problem-solving special award.",
-    statusSummary: "Recognized",
-  },
-  {
-    number: "05",
-    id: "agriculture-drone",
-    name: "Autonomous Agriculture Drone",
-    subtitle: "3.5-Inch Autonomous Seed-Planting Drone",
-    tags: ["Drone build", "Arduino payload", "ArduPilot autonomy", "soil-informed planting"],
-    problem:
-      "Many agriculture drones disperse seeds broadly without directly evaluating local soil conditions. This wastes seeds and reduces planting precision.",
-    approach:
-      "The drone was built from individual parts and used a standard flight controller for the aircraft, with an Arduino-based payload system for seed deployment. The concept used soil/environmental measurements such as humidity, temperature, and soil-related indicators to estimate whether seed clusters should be dropped.",
-    contribution:
-      "The main contribution was coupling autonomous flight with local decision-making: seed clusters were dropped only when the estimated growth probability exceeded a threshold.",
-    status: "Won 2nd place at the school CPS Expo; project continued as an efficiency-improvement effort.",
-    statusSummary: "2nd place",
-  },
-  {
-    number: "06",
-    id: "cubesat-power",
-    name: "CubeSAT Power Subsystem",
-    subtitle: "School CubeSAT Power Subsystem Team",
-    tags: ["Leadership", "power simulation", "research presentation"],
-    problem:
-      "CubeSAT power budgets require careful modeling of generation, storage, duty cycles, and subsystem load. Even small errors can cause mission-level instability.",
-    approach:
-      "As one of the heads of the school CubeSAT power subsystem team, the work focuses on power simulation, analysis, and a research paper that was presented at SmallSat 2026 and NCSS Student Research Conference 2026.",
-    contribution:
-      "The contribution is leadership plus technical simulation: translating engineering requirements into a model that can guide subsystem decisions.",
-    status: "Active. Preparing paper and presentation.",
-    statusSummary: "Active",
-  },
-  {
-    number: "07",
     id: "rit-opencarp-s1s2",
     name: "RIT openCARP S1–S2 Scar-Substrate Study",
     subtitle: "Cardiac Electrophysiology Simulation and Re-entry Analysis",
@@ -214,34 +158,90 @@ export const MAJOR_PROJECTS: readonly MajorProject[] = [
     ],
   },
   {
-    number: "08",
-    id: "mit-star-lab-skyscraper",
-    name: "SkyScraper Satellite-Imagery Event Validation",
-    subtitle: "MIT STAR Lab Human Validation Pipeline",
-    tags: ["MIT STAR Lab", "geospatial AI", "satellite imagery", "human-in-the-loop validation"],
+    number: "04",
+    id: "gas-localization",
+    name: "Distributed Gas-Leak Source Localization System",
+    subtitle: "IoT Sensor Graph for Unsafe Gas Localization",
+    tags: ["ESP32 sensor network", "Raspberry Pi 5 cluster", "lightweight U-Net inverse reconstruction"],
     problem:
-      "Turning news-reported events into useful remote-sensing datasets requires more than matching a location and date. Each candidate must be checked to determine whether the claimed event is actually visible in the satellite imagery and whether the proposed temporal window is accurate.",
+      "Unsafe gases and particulate concentrations can be invisible and odorless, making manual source identification unreliable in maker labs, garages, workshops, and small manufacturing lines.",
     approach:
-      "The SkyScraper workflow extracts event locations and timelines from news, gathers temporal satellite imagery, and uses model-assisted verification before human review. The validation work examines the article context, location, and image sequence; records Yes, No, or Unsure visibility decisions; corrects first and last visible dates; and documents ambiguous cases.",
+      "The system uses a graph of distributed sensor nodes, each powered by a central ESP32-style microcontroller architecture and equipped with sensors such as PM2.5 and CO2. Sensor readings are fused on a central cluster of two Raspberry Pi 5 units. A lightweight U-Net performs partial, feature-focused inverse reconstruction to estimate high-concentration regions and likely source zones.",
     contribution:
-      "The human-validation stage provides quality control for a large-scale geospatial data pipeline. Careful visibility judgments and date corrections help separate visually supported events from plausible but unsupported matches, creating stronger training and evaluation data for remote-sensing models.",
+      "The key novelty is modular expansion: more sensing nodes can be added to increase coverage without changing the core reconstruction concept. This makes the system more practical for real environments than a single-point detector, because the model learns spatial structure rather than just thresholding one sensor.",
     status:
-      "Active work with the MIT STAR Lab SkyScraper team, focused on satellite-imagery review, annotation consistency, and quality control.",
-    statusSummary: "Active at MIT STAR Lab",
-    technicalStack: [
+      "Prototype/project concept completed as one of the major ML systems in the portfolio; suitable for further testing in controlled lab or workshop environments.",
+    statusSummary: "Prototype / concept complete",
+    supplementalSections: [
       {
-        label: "Validation",
-        items: "Temporal satellite-imagery review, event visibility labels, date-boundary correction, and annotation notes.",
-      },
-      {
-        label: "Tooling",
-        items: "Python, Streamlit, structured metadata, and CSV-based review feedback.",
-      },
-      {
-        label: "Research context",
-        items: "Human-in-the-loop verification for news-derived geospatial event sequences and remote-sensing datasets.",
+        label: "Potential applications",
+        items: [
+          "Maker labs with CNC machines, laser cutters, 3D printers, soldering stations, and resin printers.",
+          "Garages and workshops where CO2, particulate matter, fumes, or combustion products can accumulate.",
+          "Small to medium manufacturing lines where low-cost spatial sensing may be more feasible than industrial-grade imaging.",
+        ],
       },
     ],
+  },
+  {
+    number: "05",
+    id: "epidemic-simulator",
+    name: "Epidemic Forecasting Simulator - MIT Blueprint Hackathon",
+    subtitle: "RNN + SEIR Disease-Spread Simulator",
+    tags: ["Hackathon project", "forecasting", "uncertainty-aware simulation"],
+    problem:
+      "Public-health forecasting requires both predictive models and uncertainty estimates. A raw prediction is less useful if it cannot communicate confidence or scenario variability.",
+    approach:
+      "The project used an RNN to forecast disease spread from 7,300 past outbreak records, including COVID-19, dengue, malaria, measles, and related outbreaks. It incorporated a SEIR simulation engine to represent disease-state transitions and Monte Carlo dropout/simulation for confidence-aware outputs.",
+    contribution:
+      "The project combined data-driven forecasting with epidemiological structure, giving the system a more interpretable simulation layer than a simple black-box predictor.",
+    status: "Completed for MIT Blueprint hackathon; serves as an example of applied ML under time constraints.",
+    statusSummary: "Completed",
+  },
+  {
+    number: "06",
+    id: "passive-energy-generator",
+    name: "Passive Energy Generator for Edge IoT Devices",
+    subtitle: "Optimized Passive Energy Harvester",
+    tags: ["Piezoelectricity", "triboelectricity", "sound/vibration/EMF capture"],
+    problem:
+      "Small IoT systems often need long-duration, low-maintenance power. Environmental energy sources such as vibration, sound, electrostatic changes, and electromagnetic frequency are usually wasted at small scales.",
+    approach:
+      "The project explored piezoelectric and triboelectric conversion, pressure-plate geometries, vibration mechanisms, and multi-source energy capture. It was designed as an edge-IoT power concept rather than a high-power generator.",
+    contribution:
+      "The novel contributions included a custom pressure-plate design and vibration mechanism intended to improve mechanical coupling into the energy-harvesting elements.",
+    status: "Recognized at GSEF with Best in Category and a creative problem-solving special award.",
+    statusSummary: "Recognized",
+  },
+  {
+    number: "07",
+    id: "agriculture-drone",
+    name: "Autonomous Agriculture Drone",
+    subtitle: "3.5-Inch Autonomous Seed-Planting Drone",
+    tags: ["Drone build", "Arduino payload", "ArduPilot autonomy", "soil-informed planting"],
+    problem:
+      "Many agriculture drones disperse seeds broadly without directly evaluating local soil conditions. This wastes seeds and reduces planting precision.",
+    approach:
+      "The drone was built from individual parts and used a standard flight controller for the aircraft, with an Arduino-based payload system for seed deployment. The concept used soil/environmental measurements such as humidity, temperature, and soil-related indicators to estimate whether seed clusters should be dropped.",
+    contribution:
+      "The main contribution was coupling autonomous flight with local decision-making: seed clusters were dropped only when the estimated growth probability exceeded a threshold.",
+    status: "Won 2nd place at the school CPS Expo; project continued as an efficiency-improvement effort.",
+    statusSummary: "2nd place",
+  },
+  {
+    number: "08",
+    id: "cubesat-power",
+    name: "CubeSAT Power Subsystem",
+    subtitle: "School CubeSAT Power Subsystem Team",
+    tags: ["Leadership", "power simulation", "research presentation"],
+    problem:
+      "CubeSAT power budgets require careful modeling of generation, storage, duty cycles, and subsystem load. Even small errors can cause mission-level instability.",
+    approach:
+      "As one of the heads of the school CubeSAT power subsystem team, the work focuses on power simulation, analysis, and a research paper that was presented at SmallSat 2026 and NCSS Student Research Conference 2026.",
+    contribution:
+      "The contribution is leadership plus technical simulation: translating engineering requirements into a model that can guide subsystem decisions.",
+    status: "Active. Preparing paper and presentation.",
+    statusSummary: "Active",
   },
 ] as const;
 

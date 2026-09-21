@@ -156,6 +156,12 @@ test("server renders the Sahil portfolio", async () => {
     assert.ok(projectsText.includes(area), `missing project area: ${area}`);
   }
   assert.equal((projectsHtml.match(/<details class="project-disclosure"/g) ?? []).length, 8);
+  assert.match(projectsHtml, /<span class="project-number">02<\/span>[\s\S]*?<span class="project-name">SkyScraper Satellite-Imagery Event Validation<\/span>/);
+  assert.match(projectsHtml, /<span class="project-number">03<\/span>[\s\S]*?<span class="project-name">RIT openCARP S1–S2 Scar-Substrate Study<\/span>/);
+  assert.ok(
+    projectsHtml.indexOf("SkyScraper Satellite-Imagery Event Validation") <
+      projectsHtml.indexOf("RIT openCARP S1–S2 Scar-Substrate Study"),
+  );
   for (const project of [
     "Magnetoionography Framework for Cardiac Inverse Feature Extraction",
     "Distributed Gas-Leak Source Localization System",
