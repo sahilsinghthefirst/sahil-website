@@ -10,30 +10,33 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "output" / "pdf" / "sahil-singh-resume-updated.pdf"
 
 PAGE_W, PAGE_H = letter
-INK = HexColor("#202421")
-MUTED = HexColor("#5E655F")
-ACCENT = HexColor("#D66A3A")
-PAPER = HexColor("#F8F4EA")
-RULE = HexColor("#D9D1C3")
+INK = HexColor("#242724")
+MUTED = HexColor("#62655F")
+ACCENT = HexColor("#D66737")
+PAPER = HexColor("#FAF7EF")
+SIDEBAR = HexColor("#EDE6DA")
+RULE = HexColor("#D7CFC2")
+WHITE = HexColor("#FFFDF8")
 
 
 def wrap(text: str, font: str, size: float, width: float) -> list[str]:
-    words = text.split()
     lines: list[str] = []
-    current = ""
-    for word in words:
-        candidate = f"{current} {word}".strip()
-        if not current or stringWidth(candidate, font, size) <= width:
-            current = candidate
-        else:
+    for paragraph in text.split("\n"):
+        words = paragraph.split()
+        current = ""
+        for word in words:
+            candidate = f"{current} {word}".strip()
+            if not current or stringWidth(candidate, font, size) <= width:
+                current = candidate
+            else:
+                lines.append(current)
+                current = word
+        if current:
             lines.append(current)
-            current = word
-    if current:
-        lines.append(current)
     return lines
 
 
-def draw_lines(
+def draw_text(
     pdf: canvas.Canvas,
     text: str,
     x: float,
@@ -41,8 +44,8 @@ def draw_lines(
     width: float,
     *,
     font: str = "Helvetica",
-    size: float = 7.25,
-    leading: float = 9.3,
+    size: float = 7.5,
+    leading: float = 10,
     color=INK,
 ) -> float:
     pdf.setFillColor(color)
@@ -53,81 +56,87 @@ def draw_lines(
     return y
 
 
-def section_title(pdf: canvas.Canvas, text: str, x: float, y: float, width: float) -> float:
+def section_heading(pdf: canvas.Canvas, number: str, title: str, x: float, y: float, width: float) -> float:
     pdf.setFillColor(ACCENT)
-    pdf.setFont("Helvetica-Bold", 8.2)
-    pdf.drawString(x, y, text.upper())
+    pdf.setFont("Helvetica-Bold", 6.2)
+    pdf.drawString(x, y + 3, number)
+    pdf.setFillColor(INK)
+    pdf.setFont("Times-Bold", 14.2)
+    pdf.drawString(x + 22, y, title)
     pdf.setStrokeColor(RULE)
-    pdf.setLineWidth(0.6)
-    pdf.line(x, y - 3.5, x + width, y - 3.5)
-    return y - 14
+    pdf.setLineWidth(0.55)
+    pdf.line(x, y - 6, x + width, y - 6)
+    return y - 23
 
 
-def role(
-    pdf: canvas.Canvas,
-    title: str,
-    dates: str,
-    body: str,
-    x: float,
-    y: float,
-    width: float,
-) -> float:
+def role(pdf: canvas.Canvas, title: str, dates: str, body: str, x: float, y: float, width: float) -> float:
     pdf.setFillColor(INK)
-    pdf.setFont("Helvetica-Bold", 8.0)
+    pdf.setFont("Helvetica-Bold", 8.7)
     pdf.drawString(x, y, title)
-    pdf.setFont("Helvetica-Bold", 6.8)
     pdf.setFillColor(MUTED)
-    pdf.drawRightString(x + width, y + 0.2, dates)
-    y -= 10
-    y = draw_lines(pdf, body, x, y, width, size=7.05, leading=8.9, color=INK)
-    return y - 6
+    pdf.setFont("Helvetica-Bold", 6.4)
+    pdf.drawRightString(x + width, y + 0.5, dates.upper())
+    y -= 13
+    y = draw_text(pdf, body, x, y, width, size=7.35, leading=9.7, color=INK)
+    return y - 9
 
 
-def research_item(
-    pdf: canvas.Canvas,
-    name: str,
-    status: str,
-    body: str,
-    x: float,
-    y: float,
-    width: float,
-) -> float:
+def paper_item(pdf: canvas.Canvas, name: str, venue: str, body: str, x: float, y: float, width: float) -> float:
     pdf.setFillColor(INK)
-    pdf.setFont("Helvetica-Bold", 8.0)
+    pdf.setFont("Helvetica-Bold", 8.7)
     pdf.drawString(x, y, name)
     pdf.setFillColor(ACCENT)
-    pdf.setFont("Helvetica-Bold", 6.7)
-    pdf.drawRightString(x + width, y + 0.2, status)
-    y -= 10
-    y = draw_lines(pdf, body, x, y, width, size=6.9, leading=8.7, color=INK)
-    return y - 5
+    pdf.setFont("Helvetica-Bold", 6.25)
+    pdf.drawRightString(x + width, y + 0.4, venue.upper())
+    y -= 13
+    y = draw_text(pdf, body, x, y, width, size=7.15, leading=9.35, color=INK)
+    return y - 8
 
 
 def bullet(pdf: canvas.Canvas, text: str, x: float, y: float, width: float) -> float:
     pdf.setFillColor(ACCENT)
-    pdf.circle(x + 2.0, y + 2.0, 1.35, fill=1, stroke=0)
-    y = draw_lines(pdf, text, x + 10, y, width - 10, size=6.9, leading=8.7, color=INK)
-    return y - 4
+    pdf.rect(x, y + 2.1, 3.2, 3.2, fill=1, stroke=0)
+    y = draw_text(pdf, text, x + 10, y, width - 10, size=7.05, leading=9.4, color=INK)
+    return y - 6
 
 
-def sidebar_block(
+def side_heading(pdf: canvas.Canvas, text: str, x: float, y: float, width: float) -> float:
+    pdf.setFillColor(ACCENT)
+    pdf.setFont("Helvetica-Bold", 6.4)
+    pdf.drawString(x, y, text.upper())
+    pdf.setStrokeColor(HexColor("#CFC4B4"))
+    pdf.setLineWidth(0.45)
+    pdf.line(x, y - 5, x + width, y - 5)
+    return y - 19
+
+
+def side_item(
     pdf: canvas.Canvas,
-    heading: str,
-    items: list[tuple[str, str]],
+    label: str,
+    text: str,
     x: float,
     y: float,
     width: float,
+    *,
+    url: str | None = None,
 ) -> float:
-    y = section_title(pdf, heading, x, y, width)
-    for label, text in items:
-        if label:
-            pdf.setFillColor(INK)
-            pdf.setFont("Helvetica-Bold", 7.2)
-            pdf.drawString(x, y, label)
-            y -= 8.7
-        y = draw_lines(pdf, text, x, y, width, size=6.75, leading=8.4, color=INK)
-        y -= 5
-    return y - 2
+    if label:
+        pdf.setFillColor(INK)
+        pdf.setFont("Helvetica-Bold", 7.1)
+        pdf.drawString(x, y, label)
+        y -= 10
+    first_y = y
+    y = draw_text(pdf, text, x, y, width, size=6.8, leading=8.8, color=MUTED)
+    if url:
+        lines = wrap(text, "Helvetica", 6.8, width)
+        if lines:
+            pdf.linkURL(
+                url,
+                (x, first_y - 2.0, x + min(width, stringWidth(lines[0], "Helvetica", 6.8)), first_y + 7.0),
+                relative=0,
+                thickness=0,
+            )
+    return y - 7
 
 
 def build() -> None:
@@ -139,33 +148,61 @@ def build() -> None:
 
     pdf.setFillColor(PAPER)
     pdf.rect(0, 0, PAGE_W, PAGE_H, fill=1, stroke=0)
-    pdf.setFillColor(INK)
-    pdf.setFont("Helvetica-Bold", 25)
-    pdf.drawString(36, 748, "Sahil Singh")
     pdf.setFillColor(ACCENT)
-    pdf.setFont("Helvetica-Bold", 8.8)
-    pdf.drawString(36, 731, "RESEARCH  /  SCIENTIFIC ML  /  EMBEDDED SYSTEMS")
+    pdf.rect(0, PAGE_H - 7, PAGE_W, 7, fill=1, stroke=0)
+
+    side_x = 414
+    side_w = PAGE_W - side_x
+    pdf.setFillColor(SIDEBAR)
+    pdf.rect(side_x, 0, side_w, PAGE_H - 7, fill=1, stroke=0)
+
+    main_x = 42
+    main_w = 344
+    inner_side_x = 436
+    inner_side_w = 152
+
+    pdf.setFillColor(INK)
+    pdf.setFont("Times-Bold", 31)
+    pdf.drawString(main_x, 743, "Sahil Singh")
+    pdf.setFillColor(ACCENT)
+    pdf.setFont("Helvetica-Bold", 7.8)
+    pdf.drawString(main_x, 719, "RESEARCH  /  SCIENTIFIC ML  /  EMBEDDED SYSTEMS")
+    pdf.setStrokeColor(RULE)
+    pdf.setLineWidth(0.8)
+    pdf.line(main_x, 704, main_x + main_w, 704)
+
+    pdf.setFillColor(INK)
+    pdf.rect(inner_side_x, 730, 38, 38, fill=1, stroke=0)
+    pdf.setFillColor(WHITE)
+    pdf.setFont("Times-Bold", 14)
+    pdf.drawCentredString(inner_side_x + 19, 743, "SS")
     pdf.setFillColor(MUTED)
-    pdf.setFont("Helvetica", 7.0)
-    contact = (
-        "gensahilsingh@gmail.com  |  724-457-4644  |  gensahilsingh.vercel.app  |  "
-        "linkedin.com/in/sahil-singh-17a641239  |  github.com/sahilsinghthefirst"
+    pdf.setFont("Helvetica", 6.1)
+    pdf.drawString(inner_side_x + 47, 749, "DULUTH, GA")
+    pdf.drawString(inner_side_x + 47, 738, "UPDATED OCTOBER 2026")
+
+    y = 681
+    pdf.setFillColor(ACCENT)
+    pdf.setFont("Helvetica-Bold", 6.2)
+    pdf.drawString(main_x, y, "PROFILE")
+    y -= 15
+    y = draw_text(
+        pdf,
+        "Student researcher working across physics-informed machine learning, biomedical inverse modeling, world-model evaluation, and human-validated satellite imagery.",
+        main_x,
+        y,
+        main_w,
+        font="Times-Roman",
+        size=9.3,
+        leading=12.2,
+        color=INK,
     )
-    pdf.drawString(36, 715, contact)
-    pdf.setStrokeColor(ACCENT)
-    pdf.setLineWidth(1.2)
-    pdf.line(36, 705, 576, 705)
+    y -= 13
 
-    main_x = 36
-    main_w = 370
-    side_x = 425
-    side_w = 151
-    y = 688
-
-    y = section_title(pdf, "Experience", main_x, y, main_w)
+    y = section_heading(pdf, "01", "Experience", main_x, y, main_w)
     y = role(
         pdf,
-        "Research Assistant | MIT STAR Lab",
+        "Research Assistant  |  MIT STAR Lab",
         "Sep 2026 - Present",
         "Validate news-driven satellite-event detections using temporal imagery; adjudicate visibility windows and document uncertain cases for SkyScraper's human-in-the-loop geospatial pipeline under Prof. Kerri Cahoy and Ms. Anderson.",
         main_x,
@@ -174,7 +211,7 @@ def build() -> None:
     )
     y = role(
         pdf,
-        "Research Assistant | Rochester Institute of Technology",
+        "Research Assistant  |  Rochester Institute of Technology",
         "Jul 2026 - Present",
         "Study ventricular tachycardia in Prof. Linwei Wang's lab under Sumeet Vadhavkar. Built a reproducible openCARP S1-S2 scar-substrate study, resolving the capture transition at 368-369 ms and a 46 ms directional delay across 24/24 ring sectors.",
         main_x,
@@ -182,36 +219,36 @@ def build() -> None:
         main_w,
     )
 
-    y = section_title(pdf, "Accepted Research", main_x, y, main_w)
-    y = research_item(
+    y = section_heading(pdf, "02", "Accepted Research", main_x, y, main_w)
+    y = paper_item(
         pdf,
         "GEML",
-        "Accepted to NeurIPS VeriCodeGen",
+        "NeurIPS VeriCodeGen",
         "Studied learned equivalence over expressions compiled to one operator; measured 41x median tree expansion and showed that nine fitted graph models remained near chance under variable-role swaps.",
         main_x,
         y,
         main_w,
     )
-    y = research_item(
+    y = paper_item(
         pdf,
         "MineOcclude",
-        "Accepted to NeurIPS PhysWorldAI and ESR",
+        "NeurIPS PhysWorldAI + ESR",
         "Built a paired Minecraft benchmark separating visual evidence, motion predictability, and readout effects; achieved 0.083-0.107 block RMSE under visible/glass conditions and characterized failure under opacity.",
         main_x,
         y,
         main_w,
     )
-    y = research_item(
+    y = paper_item(
         pdf,
         "MIG-PINO Cardiac Field Localization",
-        "Accepted to NeurIPS PhysWorldAI",
+        "NeurIPS PhysWorldAI",
         "Evaluated FNO and DeepONet on 500 cardiac simulations: held-out LAT/APD90 field R2 reached at least 0.954 while localization Dice exposed failure modes hidden by global accuracy.",
         main_x,
         y,
         main_w,
     )
 
-    y = section_title(pdf, "Selected Engineering & Leadership", main_x, y, main_w)
+    y = section_heading(pdf, "03", "Selected Engineering & Leadership", main_x, y, main_w)
     y = bullet(
         pdf,
         "CubeSAT Power Subsystem Co-Lead - modeled generation, storage, duty cycles, and loads; presented at SmallSat 2026 and the NCSS Student Research Conference 2026.",
@@ -241,7 +278,7 @@ def build() -> None:
         main_w,
     )
 
-    y = section_title(pdf, "Additional Projects", main_x, y, main_w)
+    y = section_heading(pdf, "04", "Additional Projects", main_x, y, main_w)
     y = bullet(
         pdf,
         "Passive edge-IoT energy harvester - piezoelectric and triboelectric multi-source design; GSEF Best in Category and creative problem-solving award.",
@@ -264,68 +301,43 @@ def build() -> None:
         main_w,
     )
 
-    sy = 688
-    sy = sidebar_block(
-        pdf,
-        "Education",
-        [
-            (
-                "Georgia Institute of Technology",
-                "Distance Math Year 1 + CS 1301\nAug 2026 - Present",
-            ),
-            (
-                "Fulton Science Academy",
-                "High School Diploma\nGrade 10 | Expected May 2029",
-            ),
-        ],
-        side_x,
-        sy,
-        side_w,
-    )
-    sy = sidebar_block(
-        pdf,
-        "Technical Skills",
-        [
-            ("Machine Learning", "PyTorch, neural operators, FNO, DeepONet, GNNs, U-Net, RNNs, Monte Carlo dropout"),
-            ("Scientific Computing", "openCARP, CellML, BOCF, Biot-Savart modeling, inverse problems, uncertainty quantification"),
-            ("Programming", "Python, C++, Java, Linux/WSL, reproducible research workflows"),
-            ("Embedded & Robotics", "Raspberry Pi, ESP32, Arduino, sensors, soldering, drones, ArduPilot, CAD/Blender"),
-        ],
-        side_x,
-        sy,
-        side_w,
-    )
-    sy = sidebar_block(
-        pdf,
-        "Recognition",
-        [
-            ("", "2x GSEF Best in Category"),
-            ("", "Thermo Fisher JIC Top 300"),
-            ("", "3x Fulton County Science Fair qualifier"),
-            ("", "GaSTC state qualifier, grades 6-8; 1st in category twice"),
-            ("", "Top 3 Speaker, Ivy Bridge Debate"),
-        ],
-        side_x,
-        sy,
-        side_w,
-    )
-    sy = sidebar_block(
-        pdf,
-        "Research Focus",
-        [
-            (
-                "",
-                "Physics-informed ML, neural operators, biomedical inverse modeling, world-model evaluation, uncertainty-aware benchmarking, and satellite-imagery analysis.",
-            )
-        ],
-        side_x,
-        sy,
-        side_w,
-    )
+    sy = 700
+    sy = side_heading(pdf, "Contact", inner_side_x, sy, inner_side_w)
+    sy = side_item(pdf, "Email", "gensahilsingh@gmail.com", inner_side_x, sy, inner_side_w, url="mailto:gensahilsingh@gmail.com")
+    sy = side_item(pdf, "Phone", "724-457-4644", inner_side_x, sy, inner_side_w, url="tel:+17244574644")
+    sy = side_item(pdf, "Portfolio", "gensahilsingh.vercel.app", inner_side_x, sy, inner_side_w, url="https://gensahilsingh.vercel.app")
+    sy = side_item(pdf, "LinkedIn", "linkedin.com/in/sahil-singh-17a641239", inner_side_x, sy, inner_side_w, url="https://www.linkedin.com/in/sahil-singh-17a641239")
+    sy = side_item(pdf, "GitHub", "github.com/sahilsinghthefirst", inner_side_x, sy, inner_side_w, url="https://github.com/sahilsinghthefirst")
+
+    sy -= 3
+    sy = side_heading(pdf, "Education", inner_side_x, sy, inner_side_w)
+    sy = side_item(pdf, "Georgia Institute of Technology", "Distance Math Year 1 + CS 1301\nAug 2026 - Present", inner_side_x, sy, inner_side_w)
+    sy = side_item(pdf, "Fulton Science Academy", "Grade 10  |  Expected May 2029", inner_side_x, sy, inner_side_w)
+
+    sy -= 3
+    sy = side_heading(pdf, "Technical Skills", inner_side_x, sy, inner_side_w)
+    sy = side_item(pdf, "Machine Learning", "PyTorch, neural operators, FNO, DeepONet, GNNs, U-Net, RNNs, Monte Carlo dropout", inner_side_x, sy, inner_side_w)
+    sy = side_item(pdf, "Scientific Computing", "openCARP, CellML, BOCF, Biot-Savart modeling, inverse problems, uncertainty quantification", inner_side_x, sy, inner_side_w)
+    sy = side_item(pdf, "Programming", "Python, C++, Java, Linux/WSL, reproducible research workflows", inner_side_x, sy, inner_side_w)
+    sy = side_item(pdf, "Embedded & Robotics", "Raspberry Pi, ESP32, Arduino, sensors, soldering, drones, ArduPilot, CAD/Blender", inner_side_x, sy, inner_side_w)
+
+    sy -= 3
+    sy = side_heading(pdf, "Recognition", inner_side_x, sy, inner_side_w)
+    for recognition in [
+        "2x GSEF Best in Category",
+        "Thermo Fisher JIC Top 300",
+        "3x Fulton County Science Fair qualifier",
+        "GaSTC state qualifier, grades 6-8; 1st in category twice",
+        "Top 3 Speaker, Ivy Bridge Debate",
+    ]:
+        pdf.setFillColor(ACCENT)
+        pdf.rect(inner_side_x, sy + 2.2, 2.8, 2.8, fill=1, stroke=0)
+        sy = draw_text(pdf, recognition, inner_side_x + 9, sy, inner_side_w - 9, size=6.75, leading=8.6, color=MUTED)
+        sy -= 5
 
     pdf.setFillColor(MUTED)
-    pdf.setFont("Helvetica-Oblique", 5.8)
-    pdf.drawRightString(576, 18, "Updated October 2026")
+    pdf.setFont("Helvetica", 5.7)
+    pdf.drawString(main_x, 23, "Selected work and results; full papers and project portfolio available online.")
     pdf.save()
 
 
