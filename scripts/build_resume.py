@@ -186,7 +186,7 @@ def build() -> None:
     y = research_item(
         pdf,
         "GEML",
-        "Accepted - VeriCodeGen 2026",
+        "Accepted to NeurIPS VeriCodeGen",
         "Studied learned equivalence over expressions compiled to one operator; measured 41x median tree expansion and showed that nine fitted graph models remained near chance under variable-role swaps.",
         main_x,
         y,
@@ -195,7 +195,7 @@ def build() -> None:
     y = research_item(
         pdf,
         "MineOcclude",
-        "Accepted - PhysWorldAI + ESR 2026",
+        "Accepted to NeurIPS PhysWorldAI and ESR",
         "Built a paired Minecraft benchmark separating visual evidence, motion predictability, and readout effects; achieved 0.083-0.107 block RMSE under visible/glass conditions and characterized failure under opacity.",
         main_x,
         y,
@@ -204,7 +204,7 @@ def build() -> None:
     y = research_item(
         pdf,
         "MIG-PINO Cardiac Field Localization",
-        "Accepted - PhysWorldAI 2026",
+        "Accepted to NeurIPS PhysWorldAI",
         "Evaluated FNO and DeepONet on 500 cardiac simulations: held-out LAT/APD90 field R2 reached at least 0.954 while localization Dice exposed failure modes hidden by global accuracy.",
         main_x,
         y,

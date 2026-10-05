@@ -178,7 +178,7 @@ export default function Home() {
               <details className="paper-disclosure">
                 <summary>
                   <span className="paper-name">GEML</span>
-                  <span className="paper-status">Accepted to VeriCodeGen</span>
+                  <span className="paper-status">Accepted to NeurIPS VeriCodeGen</span>
                   <span className="summary-icon" aria-hidden="true">+</span>
                 </summary>
                 <div className="paper-panel">
@@ -205,7 +205,7 @@ export default function Home() {
               <details className="paper-disclosure">
                 <summary>
                   <span className="paper-name">MineOcclude</span>
-                  <span className="paper-status">Accepted to PhysWorldAI and ESR</span>
+                  <span className="paper-status">Accepted to NeurIPS PhysWorldAI and ESR</span>
                   <span className="summary-icon" aria-hidden="true">+</span>
                 </summary>
                 <div className="paper-panel">
@@ -220,7 +220,7 @@ export default function Home() {
               <details className="paper-disclosure">
                 <summary>
                   <span className="paper-name">MIG-PINO</span>
-                  <span className="paper-status">Accepted to PhysWorldAI</span>
+                  <span className="paper-status">Accepted to NeurIPS PhysWorldAI</span>
                   <span className="summary-icon" aria-hidden="true">+</span>
                 </summary>
                 <div className="paper-panel">
