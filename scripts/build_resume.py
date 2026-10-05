@@ -83,21 +83,20 @@ def role(pdf: canvas.Canvas, title: str, dates: str, body: str, x: float, y: flo
 
 def paper_item(pdf: canvas.Canvas, name: str, venue: str, body: str, x: float, y: float, width: float) -> float:
     pdf.setFillColor(INK)
-    pdf.setFont("Helvetica-Bold", 8.7)
-    pdf.drawString(x, y, name)
-    pdf.setFillColor(ACCENT)
-    pdf.setFont("Helvetica-Bold", 6.25)
-    pdf.drawRightString(x + width, y + 0.4, venue.upper())
+    pdf.setFont("Helvetica-Bold", 8.45)
+    pdf.drawString(x, y, f"{name} - Accepted to {venue} 2026")
     y -= 13
     y = draw_text(pdf, body, x, y, width, size=7.15, leading=9.35, color=INK)
     return y - 8
 
 
-def bullet(pdf: canvas.Canvas, text: str, x: float, y: float, width: float) -> float:
-    pdf.setFillColor(ACCENT)
-    pdf.rect(x, y + 2.1, 3.2, 3.2, fill=1, stroke=0)
-    y = draw_text(pdf, text, x + 10, y, width - 10, size=7.05, leading=9.4, color=INK)
-    return y - 6
+def structured_item(pdf: canvas.Canvas, title: str, body: str, x: float, y: float, width: float) -> float:
+    pdf.setFillColor(INK)
+    pdf.setFont("Helvetica-Bold", 8.35)
+    pdf.drawString(x, y, title)
+    y -= 12
+    y = draw_text(pdf, body, x, y, width, size=7.05, leading=9.3, color=INK)
+    return y - 7
 
 
 def side_heading(pdf: canvas.Canvas, text: str, x: float, y: float, width: float) -> float:
@@ -232,7 +231,7 @@ def build() -> None:
     y = paper_item(
         pdf,
         "MineOcclude",
-        "NeurIPS PhysWorldAI + ESR",
+        "NeurIPS PhysWorldAI and ESR",
         "Built a paired Minecraft benchmark separating visual evidence, motion predictability, and readout effects; achieved 0.083-0.107 block RMSE under visible/glass conditions and characterized failure under opacity.",
         main_x,
         y,
@@ -249,29 +248,33 @@ def build() -> None:
     )
 
     y = section_heading(pdf, "03", "Selected Engineering & Leadership", main_x, y, main_w)
-    y = bullet(
+    y = structured_item(
         pdf,
-        "CubeSAT Power Subsystem Co-Lead - modeled generation, storage, duty cycles, and loads; presented at SmallSat 2026 and the NCSS Student Research Conference 2026.",
+        "CubeSAT Power Subsystem Co-Lead",
+        "Modeled generation, storage, duty cycles, and loads; presented at SmallSat 2026 and the NCSS Student Research Conference 2026.",
         main_x,
         y,
         main_w,
     )
-    y = bullet(
+    y = structured_item(
         pdf,
-        "CASCADE, MIT Blueprint - combined an RNN trained on 7,629 outbreak records with a global SEIR simulator and Monte Carlo Tree Search across 155+ countries.",
+        "CASCADE  |  MIT Blueprint",
+        "Combined an RNN trained on 7,629 outbreak records with a global SEIR simulator and Monte Carlo Tree Search across 155+ countries.",
         main_x,
         y,
         main_w,
     )
-    y = bullet(
+    y = structured_item(
         pdf,
-        "Distributed gas-leak localization - ESP32 PM2.5/CO2 sensor graph, dual Raspberry Pi 5 cluster, and lightweight U-Net spatial reconstruction.",
+        "Distributed Gas-Leak Localization",
+        "Built an ESP32 PM2.5/CO2 sensor graph, dual Raspberry Pi 5 cluster, and lightweight U-Net spatial reconstruction pipeline.",
         main_x,
         y,
         main_w,
     )
-    y = bullet(
+    y = structured_item(
         pdf,
+        "Teaching & Math Leadership",
         "AP Calculus BC teaching assistant and Math Olympiad tutor; Leading Officer at Peachtree Math Circle.",
         main_x,
         y,
@@ -279,23 +282,26 @@ def build() -> None:
     )
 
     y = section_heading(pdf, "04", "Additional Projects", main_x, y, main_w)
-    y = bullet(
+    y = structured_item(
         pdf,
-        "Passive edge-IoT energy harvester - piezoelectric and triboelectric multi-source design; GSEF Best in Category and creative problem-solving award.",
+        "Passive Edge-IoT Energy Harvester",
+        "Developed a piezoelectric and triboelectric multi-source design; received GSEF Best in Category and a creative problem-solving award.",
         main_x,
         y,
         main_w,
     )
-    y = bullet(
+    y = structured_item(
         pdf,
-        "Autonomous agriculture drone - custom 3.5-inch build with ArduPilot flight control, Arduino seed payload, and soil-informed deployment; CPS Expo 2nd place.",
+        "Autonomous Agriculture Drone",
+        "Built a custom 3.5-inch drone with ArduPilot flight control, an Arduino seed payload, and soil-informed deployment; earned CPS Expo 2nd place.",
         main_x,
         y,
         main_w,
     )
-    y = bullet(
+    y = structured_item(
         pdf,
-        "IRIS face-recognition attendance system - Raspberry Pi inference with automated spreadsheet logging.",
+        "IRIS Face-Recognition Attendance System",
+        "Implemented Raspberry Pi inference with automated spreadsheet logging.",
         main_x,
         y,
         main_w,
