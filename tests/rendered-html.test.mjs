@@ -241,10 +241,10 @@ test("server renders the Sahil portfolio", async () => {
   assert.match(html, /<a class="work-card work-card-link" href="https:\/\/www\.linkedin\.com\/in\/sahil-singh-17a641239"[^>]*target="_blank"[^>]*rel="noreferrer"[^>]*>[\s\S]*<h2>LinkedIn<\/h2>[\s\S]*Find me there/);
   assert.match(html, /href="#papers">Papers/);
   assert.equal((html.match(/<details class="paper-disclosure"/g) ?? []).length, 4);
-  assert.match(html, /<summary>[\s\S]*GEML[\s\S]*Pending NeurIPS VeriCodeGen submission/);
+  assert.match(html, /<summary>[\s\S]*GEML[\s\S]*Accepted to VeriCodeGen/);
   assert.match(html, /<summary>[\s\S]*BPC-FNO/);
-  assert.match(html, /<summary>[\s\S]*MineOcclude[\s\S]*Pending NeurIPS PhysWorldAI submission/);
-  assert.match(html, /<summary>[\s\S]*MIG-PINO[\s\S]*Pending NeurIPS ICBINB-BIO submission/);
+  assert.match(html, /<summary>[\s\S]*MineOcclude[\s\S]*Accepted to PhysWorldAI and ESR/);
+  assert.match(html, /<summary>[\s\S]*MIG-PINO[\s\S]*Accepted to PhysWorldAI/);
   assert.match(html, /href="\/papers\/geml-paper\.pdf"/);
   assert.match(html, /href="\/papers\/bpc-fno-paper\.pdf"/);
   assert.match(html, /href="\/papers\/mineocclude-paper\.pdf"/);

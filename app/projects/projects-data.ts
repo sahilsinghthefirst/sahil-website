@@ -8,7 +8,7 @@ export const CURRENT_DIRECTION = {
   recognition:
     "Recognition: GSEF Best in Category both times attended, Fulton County qualifier 3/3 times, Thermo Fisher JIC Top 300, GaSTC state qualification from 6th-8th grade.",
   presentation:
-    "Presentation: preparing CubeSAT power subsystem work for the NCSS Student Research Conference in Summer 2026.",
+    "Presentation: presented CubeSAT power subsystem work at SmallSat 2026 and the NCSS Student Research Conference 2026.",
 } as const;
 
 export const AREAS = [
